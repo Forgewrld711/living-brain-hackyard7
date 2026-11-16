@@ -35,7 +35,7 @@ function syncInset() {
   const bottom = document.querySelector('.dock')?.offsetHeight || 0;
   creature.setInset({ right, bottom });
 }
-syncInset();
+syncInset(); // first layout: setInset({ right, bottom }, { immediate: true }) to skip the 500ms settle
 // also call syncInset() from the panel toggle and on resize
 
 // every time the store changes:
@@ -57,7 +57,7 @@ if (a) {
 }
 ```
 
-`createCreature(canvas, options)` sizes itself to the canvas's CSS box (ResizeObserver, HiDPI). Layout uses the canvas minus `inset`, so the body is centered in the visible area (slightly low, at 56% of that area's height) and scales to it. The night background still fills the whole canvas.
+`createCreature(canvas, options)` sizes itself to the canvas's CSS box (ResizeObserver, HiDPI). Layout uses the canvas minus `inset`, so the body is centered in the visible area (slightly low, at 56% of that area's height) and scales to it. The night background still fills the whole canvas. When the inset or the canvas size changes, that layout (centre and scale) eases over about 500 ms with an ease-in-out curve, so a taller argument card does not make the creature jump. Reduced motion snaps instantly. `getAnchor` / `getNodePosition` return the current eased positions, so a bubble that follows the head moves with it.
 
 | options | |
 |---|---|
@@ -73,10 +73,10 @@ if (a) {
 | `setNotes(notes, links)` | notes and links in the shared format; new notes swell out of their parent |
 | `onNodeClick(fn)` / `onNodeHover(fn)` | add a handler; returns an unsubscribe fn |
 | `setReducedMotion(bool \| undefined)` | |
-| `setInset({ left, right, top, bottom })` | replace the inset (omitted sides are 0). `setInset({})` or `setInset()` clears it, e.g. when the panel closes. |
-| `getInset()` | the current `{ left, right, top, bottom }` |
-| `getNodePosition(id)` | `{ x, y, r, name }` in CSS px relative to the canvas, or null |
-| `getAnchor(name)` | same shape. `name` is `'head'` (default), `'torso'` / `'chest'`, `'eyes'`, or a note id (same as `getNodePosition`). Null if that part is not laid out yet. |
+| `setInset({ left, right, top, bottom }, opts?)` | replace the inset (omitted sides are 0). `setInset({})` or `setInset()` clears it, e.g. when the panel closes. The layout eases to the new box over ~500 ms (ease-in-out). Pass `{ immediate: true }` to snap, e.g. on the first layout: `setInset({ right: 320, bottom }, { immediate: true })`. Reduced motion always snaps. |
+| `getInset()` | the requested `{ left, right, top, bottom }` (the target, not a mid-ease value) |
+| `getNodePosition(id)` | `{ x, y, r, name }` in CSS px relative to the canvas, or null — current eased position |
+| `getAnchor(name)` | same shape, also eased. `name` is `'head'` (default), `'torso'` / `'chest'`, `'eyes'`, or a note id (same as `getNodePosition`). Null if that part is not laid out yet. |
 | `getLimbs()` | `{ topic, ids, chain, petals, sag, angle }` for each limb |
 | `stage` | `creature.stage` from `tick()` if given; else hatchling under 8 notes, growing under 20, then well_fed |
 | `resize()`, `destroy()` | |
@@ -111,5 +111,5 @@ Motion is quiet: everything eases exponentially, with no overshoot, bounce, or s
 ## Notes for the team
 - The body scales by note count (0.56× → 1× from 4 to 30 notes). The stage *label* comes from `tick()` (`hatchling` under 8 live notes, `growing` under 20, then `well_fed`).
 - `hungryFor` is the drooping limb's `topic` (an array, e.g. `['street gifts']`). `hungryIds` are that limb's note ids, and stay filled during an argument so the droop survives it. Older brains may put note titles in `hungryFor`; those also resolve to the note's limb.
-- The canvas is full-window. Call `setInset({ right: 320, bottom: dock.offsetHeight })` so the creature sits in the open column beside the notes panel; pin `#bubble` with `getAnchor('head')`. Exact calls are in the API snippet above.
+- The canvas is full-window. Call `setInset({ right: 320, bottom: dock.offsetHeight })` so the creature sits in the open column beside the notes panel; pin `#bubble` with `getAnchor('head')`. Inset and resize changes ease over ~500 ms; pass `{ immediate: true }` on the first layout if you do not want a settle on load. Exact calls are in the API snippet above.
 - `contradiction.a` gets the warm flare and `b` the cool one, so put the older note in `a` if it matters.

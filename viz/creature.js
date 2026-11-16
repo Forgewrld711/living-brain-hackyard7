@@ -57,6 +57,8 @@ export function createCreature(canvas, options = {}) {
 
   // inset: the creature is laid out in the canvas minus this margin (CSS px), so it can
   // sit in the open area beside the shell's 320px side panel and above the dock.
+  // Changes to inset (and resize-driven cx/cy/U) ease over VIEW_EASE seconds, ease-in-out.
+  const VIEW_EASE = 0.5;
   const normInset = v => {
     const o = v && typeof v === 'object' ? v : {};
     return {
@@ -64,13 +66,38 @@ export function createCreature(canvas, options = {}) {
       top: Math.max(0, +o.top || 0), bottom: Math.max(0, +o.bottom || 0),
     };
   };
-  let inset = normInset(options.inset);
-  const visible = () => {
+  const easeInOut = t => { t = clamp(t, 0, 1); return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2; };
+  let inset = normInset(options.inset); // target (requested) inset
+  const targetView = () => {
     const l = inset.left, t = inset.top;
     const w = Math.max(1, W - l - inset.right), h = Math.max(1, H - t - inset.bottom);
-    return { l, t, w, h, cx: l + w * 0.5, cy: t + h * 0.56 };
+    return { l, t, w, h, cx: l + w * 0.5, cy: t + h * 0.56, U: Math.min(w, h) / 1000 };
   };
-  const applySize = () => { const v = visible(); U = Math.min(v.w, v.h) / 1000; };
+  let view = null, viewFrom = null, viewTo = null, viewT0 = 0, viewDur = 0;
+  const visible = () => view || targetView();
+  const snapView = to => { view = viewFrom = viewTo = { ...to }; viewDur = 0; U = view.U; };
+  const lerpView = (a, b, u) => {
+    const k = easeInOut(u), m = (x, y) => x + (y - x) * k;
+    return { l: m(a.l, b.l), t: m(a.t, b.t), w: m(a.w, b.w), h: m(a.h, b.h), cx: m(a.cx, b.cx), cy: m(a.cy, b.cy), U: m(a.U, b.U) };
+  };
+  const beginViewEase = (immediate) => {
+    if (!W || !H) return;
+    const to = targetView();
+    if (immediate || reduced() || !view) { snapView(to); return; }
+    const close = Math.abs(view.cx - to.cx) < 0.5 && Math.abs(view.cy - to.cy) < 0.5 && Math.abs(view.U - to.U) < 1e-4;
+    if (close && !viewDur) { snapView(to); return; }
+    viewFrom = { ...view }; viewTo = to; viewT0 = time; viewDur = VIEW_EASE;
+  };
+  const stepView = () => {
+    if (!W || !H) return;
+    const to = viewTo || targetView();
+    if (reduced()) { snapView(to); return; }
+    if (!viewDur) { if (!view) snapView(to); else U = view.U; return; }
+    const u = (time - viewT0) / viewDur;
+    if (u >= 1) { snapView(viewTo); return; }
+    view = lerpView(viewFrom, viewTo, u); U = view.U;
+  };
+  const viewEasing = () => viewDur > 0 && (time - viewT0) < viewDur && !reduced();
 
   // ---------- inputs ----------
   function setNotes(notesIn = [], linksIn = []) {
@@ -339,7 +366,8 @@ export function createCreature(canvas, options = {}) {
       if (time < a.born) { a.x = origin.x; a.y = origin.y; }
       else {
         a.grow = approach(a.grow, 1, dt, 0.8 * k);
-        a.x = approach(a.x, T2.x, dt, 0.75 * k); a.y = approach(a.y, T2.y, dt, 0.75 * k);
+        if (viewEasing()) { a.x = T2.x; a.y = T2.y; }
+        else { a.x = approach(a.x, T2.x, dt, 0.75 * k); a.y = approach(a.y, T2.y, dt, 0.75 * k); }
       }
       const sag = T2.limb.sag || 0;
       const wT = 1 - sag * (0.45 + 0.4 * T2.depth); // stays softly lit, never out
@@ -374,7 +402,7 @@ export function createCreature(canvas, options = {}) {
     bg.width = Math.max(1, W * dpr); bg.height = Math.max(1, H * dpr);
     const b = bg.getContext('2d'); b.scale(dpr, dpr);
     b.fillStyle = PAL.night; b.fillRect(0, 0, W, H);
-    const v = visible(), m = Math.min(v.w, v.h), mx = v.l + v.w * 0.84, my = v.t + v.h * 0.14;
+    const v = targetView(), m = Math.min(v.w, v.h), mx = v.l + v.w * 0.84, my = v.t + v.h * 0.14;
     const rad = (x, y, r, c, a) => { const gr = b.createRadialGradient(x, y, 0, x, y, r); gr.addColorStop(0, rgba(c, a)); gr.addColorStop(1, rgba(c, 0)); b.fillStyle = gr; b.fillRect(x - r, y - r, 2 * r, 2 * r); };
     rad(mx, my, m * 0.45, C.lifted, 0.9);
     for (let i = 0; i < 70; i++) {
@@ -588,23 +616,28 @@ export function createCreature(canvas, options = {}) {
   }
 
   // ---------- loop, sizing, input ----------
-  function relayout() {
-    if (!W || !H) return;
-    applySize();
-    buildBg();
-    const R = reduced();
-    layout(0, R, R ? 0.35 : 1);
-  }
-  function setInset(v) {
+  function setInset(v, opts = {}) {
     inset = normInset(v);
-    relayout();
+    const immediate = !!(opts && opts.immediate);
+    beginViewEase(immediate);
+    if (W && H) buildBg();
+    if (immediate || reduced() || !frame.Hc) {
+      const R = reduced();
+      layout(0, R, R ? 0.35 : 1);
+    }
   }
   function resize() {
     const r = canvas.getBoundingClientRect();
     dpr = Math.min(2, window.devicePixelRatio || 1);
+    const first = !W || !H;
     W = Math.max(1, r.width); H = Math.max(1, r.height);
     canvas.width = Math.round(W * dpr); canvas.height = Math.round(H * dpr);
-    relayout();
+    beginViewEase(first);
+    buildBg();
+    if (first || reduced() || !frame.Hc) {
+      const R = reduced();
+      layout(0, R, R ? 0.35 : 1);
+    }
   }
   // CSS px relative to the canvas (same space as pointer events). If the canvas is
   // position:fixed; inset:0, these are also viewport coordinates.
@@ -626,7 +659,7 @@ export function createCreature(canvas, options = {}) {
   }
   function tick(now) {
     const dt = Math.min(0.05, Math.max(0, (now - last) / 1000)); last = now; time += dt;
-    step(dt); draw();
+    stepView(); step(dt); draw();
     raf = requestAnimationFrame(tick);
   }
   function pick(ev) {
@@ -652,9 +685,9 @@ export function createCreature(canvas, options = {}) {
     setNotes, update,
     onNodeClick(fn) { handlers.click.add(fn); return () => handlers.click.delete(fn); },
     onNodeHover(fn) { handlers.hover.add(fn); return () => handlers.hover.delete(fn); },
-    setReducedMotion(v) { reducedOverride = v; },
+    setReducedMotion(v) { reducedOverride = v; if (reduced() && W && H) snapView(targetView()); },
     getNodePosition, getAnchor, setInset,
-    getInset() { return { ...inset }; },
+    getInset() { return { ...inset }; }, // the requested inset, not the mid-ease camera
     getLimbs() { return limbs.map(l => ({ topic: l.topic, ids: l.ids.slice(), chain: l.chain.slice(), petals: l.petals.slice(), sag: l.sag || 0, angle: l.angle })); },
     get stage() { return brain.stage || (notes.length < 8 ? 'hatchling' : notes.length < 20 ? 'growing' : 'well_fed'); },
     resize,
