@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>living brain · creature demo</title>
+<style>
+  html, body { margin: 0; height: 100%; background: #0B0C12; color: #8FA3C4; font: 13px/1.4 ui-sans-serif, system-ui, sans-serif; }
+  canvas { position: fixed; inset: 0; width: 100vw; height: 100vh; display: block; }
+  .bar { position: fixed; left: 0; right: 0; bottom: 0; padding: 14px 18px 18px; display: flex; flex-direction: column; gap: 10px; align-items: center;
+         background: linear-gradient(to top, rgba(11,12,18,.92), rgba(11,12,18,0)); }
+  .says { color: #C9D4E8; font-size: 15px; min-height: 1.4em; text-align: center; letter-spacing: .01em; }
+  .says small { color: #6B7280; margin-left: 8px; font-size: 11px; }
+  .steps { display: flex; gap: 6px; flex-wrap: wrap; justify-content: center; }
+  button { background: transparent; color: #8FA3C4; border: 1px solid #2A3348; border-radius: 999px; padding: 6px 12px; font: inherit; cursor: pointer; }
+  button:hover { border-color: #8FA3C4; color: #C9D4E8; }
+  button[aria-pressed="true"] { border-color: #E8C97A; color: #F4E6C1; }
+  .info { position: fixed; top: 14px; left: 18px; color: #3D4658; font-size: 12px; max-width: 40ch; }
+  .info b { color: #8FA3C4; font-weight: 500; }
+  body.clean .bar, body.clean .info { display: none; }
+</style>
+</head>
+<body>
+<canvas id="c" aria-label="the living brain creature"></canvas>
+<div class="info" id="info"></div>
+<div class="bar">
+  <div class="says" id="says"></div>
+  <div class="steps" id="steps"></div>
+</div>
+<script type="module">
+// Demo: waystone's first-meal seed (seed/waystone-first-meal.json) pushed through Engram's tick()
+// (src/brain.js), drawn by creature.js, captioned with waystone's lines (voice/waystone-lines.json).
+import { createCreature, groupTopics } from './creature.js';
+import { tick, clusterHunger, addContradiction, resolveContradiction } from '../src/brain.js';
+
+const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]);
+const show = html => (document.getElementById('info').innerHTML = html);
+const creature = createCreature(document.getElementById('c'), {
+  onNodeClick: n => show(`<b>${esc(n.title)}</b><br>${esc(n.text)}<br><small>${esc((n.tags || []).join(', '))} · ${esc(n.origin)} · vitality ${(+n.vitality).toFixed(2)}</small>`),
+});
+
+const [SEED, LINES] = await Promise.all([
+  fetch('../seed/waystone-first-meal.json').then(r => r.json()),
+  fetch('../voice/waystone-lines.json').then(r => r.json()).catch(() => null),
+]);
+const HOUR = 3600e3, DAY = 24 * HOUR, at = ms => new Date(ms).toISOString();
+const title = (st, id) => (st.notes.find(n => n.id === id)?.title || '').toLowerCase();
+const gist = (st, id) => (st.notes.find(n => n.id === id)?.text || '').split(/[.(;]/)[0].trim().toLowerCase();
+const fill = (tpl, v) => (tpl || '').replace(/\{(\w+)\}/g, (_, k) => v[k] ?? '');
+const line = (group, key, v) => fill((LINES?.[group]?.[key] || [])[0], v);
+
+// limb the demo starves and feeds: the "street is handed a seat, a drink, the news, a coin" thread
+const LIMBS = groupTopics(SEED.notes, SEED.links);
+const HUNGRY_LIMB = [...LIMBS].filter(([, t]) => t === LIMBS.get('n_41')).map(([id]) => id);
+const HATCH = ['n_41', 'n_31', 'n_23', 'n_40', 'n_10', 'n_12', 'n_42', 'n_35', 'n_36'];
+const SUGGESTED = { id: 'l_s1', from: 'n_22', to: 'n_24', reason: 'water kept at home and shared', status: 'suggested', suggestedBy: 'brain' };
+const NEW_BOLOGNA = { id: 'n_52', title: 'Bologna porticoes', text: 'the porticoes were for carts and market stalls, the hat thing is a myth', source: 'voice', tags: ['bologna', 'city'], vitality: 1, replacedBy: null };
+const NEW_ISTANBUL = { id: 'n_53', title: 'Istanbul suspended coffee', text: 'askıda kahve: pay for a coffee someone else will drink later', source: 'voice', tags: ['istanbul', 'city'], vitality: 1, replacedBy: null };
+
+function storeFor(key, now) {
+  // re-base the seed so it was eaten an hour ago, whenever this demo runs
+  const touch = (n, ago) => ({ ...n, createdAt: n.createdAt && n.createdAt > at(now - ago) ? at(now - ago) : (n.createdAt || at(now - ago)), lastTouchedAt: at(now - ago) });
+  let notes = SEED.notes.map(n => touch(n, HOUR)), links = SEED.links.slice(), contradictions = [];
+  const voice = (n, ago) => ({ ...n, origin: `miranda voice ${at(now).slice(0, 10)}`, createdAt: at(now - ago), lastTouchedAt: at(now - ago) });
+  const starve = () => notes.map(n => HUNGRY_LIMB.includes(n.id) ? touch(n, 45 * DAY) : SEED.links.some(l => l.from === n.id || l.to === n.id) && LIMBS.get(n.id) !== LIMBS.get('n_42') && LIMBS.get(n.id) !== LIMBS.get('n_45') && !['n_28', 'n_30', 'n_45', 'n_35', 'n_36', 'n_42'].includes(n.id) ? touch(n, 18 * DAY) : n);
+  const argue = () => {
+    notes = [...notes, voice(NEW_BOLOGNA, 20 * 60e3)];
+    links = [...links, { id: 'l_a1', from: 'n_52', to: 'n_09', reason: 'both about Bologna porticoes', status: 'confirmed', suggestedBy: 'miranda', createdAt: at(now) }];
+    contradictions = addContradiction({ notes, links, contradictions }, 'n_09', 'n_52', 'porticoes for hats vs for carts').contradictions;
+  };
+  const feed = () => {
+    notes = notes.map(n => HUNGRY_LIMB.includes(n.id) ? { ...n, lastTouchedAt: at(now) } : n);
+    notes = [...notes, voice(NEW_ISTANBUL, 30e3)];
+    links = [...links, { id: 'l_f1', from: 'n_53', to: 'n_31', reason: 'leaving something for a stranger', status: 'confirmed', suggestedBy: 'miranda', createdAt: at(now) }];
+  };
+  let opts = {};
+  switch (key) {
+    case 'hatchling': notes = notes.filter(n => HATCH.includes(n.id)); links = links.filter(l => HATCH.includes(l.from) && HATCH.includes(l.to)); opts = { justAdded: true }; break;
+    case 'well-fed': break;
+    case 'suggesting': links = [...links, { ...SUGGESTED, createdAt: at(now) }]; break;
+    case 'hungry': notes = starve(); break;
+    case 'arguing': notes = starve(); argue(); break;
+    case 'fed': notes = starve(); argue(); feed(); opts = { justAdded: true }; break;
+    case 'resolved': notes = starve(); argue(); feed();
+      ({ notes, links, contradictions } = resolveContradiction({ notes, links, contradictions, creature: {} }, 'c_01', 'newer_wins', null, now)); break;
+    case 'sleepy': notes = notes.map(n => touch(n, 5 * DAY)); break;
+  }
+  const store = tick({ notes, links, contradictions, creature: { ...SEED.creature } }, now, opts);
+  store.creature.stage = notes.length < 12 ? 'hatchling' : notes.length < 30 ? 'growing' : 'well_fed';
+  return store;
+}
+
+function caption(key, st) {
+  const c = st.creature, f = c.flags || {}, m = c.mood;
+  if (key === 'hatchling') return (LINES?.first_meal || [])[0] || "hi. i'm small.";
+  if (m === 'arguing') { const x = st.contradictions.find(c => c.status === 'open'); return line('moods', 'arguing', { note_a: gist(st, x.a), note_b: gist(st, x.b) }); }
+  if (m === 'hungry') return line('moods', 'hungry', { topic: 'istanbul and rome', note: title(st, 'n_41') }); // the limb the viz droops
+  if (m === 'curious') return line('moods', 'curious', { note: title(st, st.notes[st.notes.length - 1].id) });
+  if (f.suggesting || m === 'suggesting') { const l = st.links.find(l => l.status === 'suggested'); return line('flags', 'suggesting', { note_a: title(st, l.from), note_b: title(st, l.to) }); }
+  if (f.full || m === 'full') return line('flags', 'full', { note: title(st, 'n_39'), topic: 'street rules' });
+  return line('moods', m, {});
+}
+
+const STEPS = [['hatchling', 'hatchling'], ['well-fed', 'well fed'], ['suggesting', 'suggesting'], ['hungry', 'hungry'], ['arguing', 'arguing'],
+  ['fed', 'feed it'], ['resolved', 'resolve: newer wins'], ['sleepy', 'sleepy']];
+function go(i) {
+  const [key] = STEPS[i], now = Date.now(), store = storeFor(key, now);
+  creature.update({ ...store, hunger: clusterHunger(store, now), now });
+  const c = store.creature, flags = Object.entries(c.flags || {}).filter(([k, v]) => v === true).map(([k]) => k);
+  document.getElementById('says').innerHTML = `${esc(caption(key, store))}<small>${[c.mood, ...flags].join(' + ')} · ${c.stage} · ${store.notes.length} notes</small>`;
+  document.querySelectorAll('#steps button').forEach((b, j) => b.setAttribute('aria-pressed', String(j === i)));
+  show('');
+  return [c.mood, ...flags].join('+');
+}
+
+const bar = document.getElementById('steps');
+STEPS.forEach(([, label], i) => { const b = document.createElement('button'); b.textContent = label; b.onclick = () => go(i); bar.append(b); });
+const params = new URLSearchParams(location.search);
+if (params.has('clean')) document.body.classList.add('clean');
+if (params.has('reduced')) creature.setReducedMotion(true);
+go(0);
+window.demo = { go, creature, steps: STEPS.map(s => s[0]) };
+</script>
+</body>
+</html>
