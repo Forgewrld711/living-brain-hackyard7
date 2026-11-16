@@ -44,10 +44,34 @@ console.log('ALL OK');
 {
 const old = new Date(Date.now() - 40 * 864e5).toISOString(), recent = new Date(Date.now() - 2 * 864e5).toISOString();
 let h = structuredClone(seed);
-h.notes = h.notes.map(n => ({ ...n, lastTouchedAt: n.topic === 'water draws the city' ? old : recent }));
+h.notes = h.notes.map(n => ({ ...n, lastTouchedAt: n.topic === 'water' ? old : recent }));
 h = S.tick(h); const hu = S.clusterHunger(h);
 console.log('T2 mood', h.creature.mood, hu.slice(0,3).map(x=>[x.ids.length,x.hunger.toFixed(2)]), S.droopingLimb(h, hu).topic, S.droopingLimb(h, hu).note);
 let h2 = structuredClone(seed); h2.notes = h2.notes.map(n => ({ ...n, lastTouchedAt: old }));
 h2 = S.newNote(h2, 'bread in lisbon').store; h2 = S.tick(h2); const hu2 = S.clusterHunger(h2);
 console.log('T3 mood', h2.creature.mood, hu2[0].hunger.toFixed(2), S.speech(h2, lines, { hunger: hu2 }));
+}
+
+{ // arguing lines quote ~8 words of each note's text, older first
+  let a = S.newNote(structuredClone(seed), 'the bologna porticoes were built so people could walk in the rain', 'text', Date.now() - 864e5).store;
+  const r2 = S.newNote(a, 'bologna porticoes were never about rain, they were for market stalls');
+  a = S.suggestLinks(r2.store, r2.note.id).store;
+  const sl = a.links.find(l => l.status === 'suggested' && [l.from, l.to].includes('n_52'));
+  assert.ok(sl, 'the two bologna notes get suggested'); a = S.confirmLink(a, sl.id);
+  a = await S.detectContradictions(a); a = S.tick(a);
+  const sp = S.speech(a, lines, { pick: () => 0 }); console.log('arguing line', sp.text);
+  assert.ok(sp.text.includes("'the bologna porticoes were built so people could…'"), 'a = older excerpt');
+  assert.ok(sp.text.indexOf('the bologna porticoes were built') < sp.text.indexOf('bologna porticoes were never'), 'older first');
+  assert.equal(S.excerpt('One two three. Four five six seven eight nine ten'), 'one two three. four five six seven eight…');
+}
+{ // {topic} is note.topic, limb named by tick()
+  const old = new Date(Date.now() - 40 * 864e5).toISOString(), recent = new Date(Date.now() - 864e5).toISOString();
+  let h = structuredClone(seed); h.notes = h.notes.map(n => ({ ...n, lastTouchedAt: n.topic === 'numbered laws' ? old : recent }));
+  h = S.tick(h); const hu = S.clusterHunger(h); const d = S.droopingLimb(h, hu);
+  console.log('T4 mood', h.creature.mood, 'hungryFor', h.creature.hungryFor, 'ids', h.creature.hungryIds.length, '->', d.topic, '/', d.note);
+  const lines0 = S.speech(h, lines, { hunger: hu, pick: () => 0 }).text; console.log('T4 line', lines0);
+  if (h.creature.mood === 'hungry') assert.equal(d.topic, 'numbered laws');
+  assert.equal(S.excerpt('a second street, upstairs (1300s).'), 'a second street, upstairs (1300s)');
+  assert.equal(S.excerpt('one two three four five six (seven eight nine ten'), 'one two three four five six…');
+  console.log('TOPIC OK');
 }

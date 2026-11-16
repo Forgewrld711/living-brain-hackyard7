@@ -145,29 +145,49 @@ export function resolve(store, cId, choice, mergedText, t = Date.now()) {
 }
 const olderOf = (store, c) => { const a = store.notes.find(n => n.id === c.a), b = store.notes.find(n => n.id === c.b); return ms(a.createdAt) <= ms(b.createdAt) ? a.id : b.id; };
 
-// Which limb droops, by name. ids: Engram's hungryIds if tick() gives them, else the hungriest
-// cluster, else the cluster with the oldest average lastTouchedAt (what Twelve's viz droops).
+// Which limb droops, by name. Engram's tick() decides: creature.hungryIds is the limb, and
+// creature.hungryFor is its topic (or, from older brain.js, its stalest titles). The shell only
+// falls back to its own guess when tick() names nothing (e.g. not hungry, or an older brain.js).
 export function droopingLimb(store, hunger = clusterHunger(store)) {
   const byId = new Map(store.notes.map(n => [n.id, n]));
-  let ids = store.creature?.hungryIds?.length ? store.creature.hungryIds : hunger[0] && hunger[0].hunger > 0.6 ? hunger[0].ids : null;
+  const c = store.creature || {}, hf = c.hungryFor || [];
+  const top = hunger[0] && hunger[0].hunger > 0.6 ? hunger[0] : null;
+  let ids = c.hungryIds?.length ? c.hungryIds : top ? top.ids : null;
   if (!ids) {
-    const staleness = c => c.ids.reduce((s, id) => s + ms(byId.get(id).lastTouchedAt), 0) / c.ids.length;
-    const multi = hunger.filter(c => c.ids.length > 1);
+    const staleness = g => g.ids.reduce((s, id) => s + ms(byId.get(id).lastTouchedAt), 0) / g.ids.length;
+    const multi = hunger.filter(g => g.ids.length > 1);
     const pool = multi.length ? multi : hunger;
     ids = pool.length ? pool.slice().sort((x, y) => staleness(x) - staleness(y))[0].ids : [];
   }
   const ns = ids.map(id => byId.get(id)).filter(n => n && alive(n));
-  const f = tagFreq(store.notes.filter(alive)), ok = usefulTag(f, store.notes.length);
-  // a cluster can hold several limbs (the seed is one big cluster), so name the stalest limb in it:
-  // group by note.topic, else by the most specific useful tag, and take the oldest average lastTouchedAt
-  const keyOf = n => n.topic || (n.tags || []).filter(ok).sort((a, b) => f.get(a) - f.get(b))[0] || (n.tags || [])[0] || 'that corner';
-  const groups = new Map();
-  for (const n of ns) { const k = keyOf(n); if (!groups.has(k)) groups.set(k, []); groups.get(k).push(n); }
   const avg = g => g.reduce((s, n) => s + ms(n.lastTouchedAt), 0) / g.length;
-  const [topic, limb] = [...groups].sort((x, y) => avg(x[1]) - avg(y[1]))[0] || ['that corner', []];
-  const hf = store.creature?.hungryFor || [];
-  const note = limb.find(n => hf.includes(n.title))?.title || limb.slice().sort((a, b) => ms(a.lastTouchedAt) - ms(b.lastTouchedAt))[0]?.title || '';
+  const topics = new Set(ns.map(n => n.topic).filter(Boolean));
+  // topic: hungryFor[0] when it is a topic, else the limb's one shared topic, else its stalest topic group
+  let topic = hf.find(x => topics.has(x)) || (topics.size === 1 ? [...topics][0] : null) || (top && top.topic) || null;
+  if (!topic && topics.size) {
+    const groups = new Map();
+    for (const n of ns) if (n.topic) { if (!groups.has(n.topic)) groups.set(n.topic, []); groups.get(n.topic).push(n); }
+    topic = [...groups].sort((x, y) => avg(x[1]) - avg(y[1]))[0][0];
+  }
+  let limb = topic ? ns.filter(n => n.topic === topic) : ns;
+  if (!topic) { // no topics at all: most specific shared tag
+    const f = tagFreq(store.notes.filter(alive)), ok = usefulTag(f, store.notes.length), m = new Map();
+    for (const t of ns.flatMap(n => (n.tags || []).filter(ok))) m.set(t, (m.get(t) || 0) + 1);
+    topic = [...m].sort((x, y) => y[1] - x[1])[0]?.[0] || 'that corner';
+  }
+  const stalest = limb.slice().sort((x, y) => ms(x.lastTouchedAt) - ms(y.lastTouchedAt));
+  const note = limb.find(n => hf.includes(n.title))?.title || stalest[0]?.title || '';
   return { ids, limbIds: limb.map(n => n.id), topic, note };
+}
+
+// ~8 of a note's own words, for arguing lines (kiln: quote the notes, not their titles)
+export function excerpt(text, max = 8) {
+  const words = String(text || '').replace(/#[\p{L}\p{N}_-]+/gu, '').replace(/\s+/g, ' ').trim().split(' ').filter(Boolean);
+  const cut = words.length > max;
+  let out = words.slice(0, max).join(' ');
+  if ((out.match(/\(/g) || []).length > (out.match(/\)/g) || []).length) out = out.slice(0, out.lastIndexOf('(')); // no half parentheses
+  out = out.replace(/[\s.,;:!?\-—]+$/, '');
+  return (out + (cut ? '…' : '')).toLowerCase();
 }
 
 // ---------- the creature's speech ----------
@@ -192,14 +212,18 @@ export function speech(store, lines, { hunger, event, lastNoteId, pick = Math.ra
   if (event === 'named') return { key: 'named', text: choose(L.naming, { name: c.name }) };
   if (event === 'after_no') return { key: 'after_no:' + Date.now(), text: choose(L.after_no, {}) };
   const arg = nextContradiction(store);
-  if (arg) return { key: 'arguing:' + arg.id, text: choose(L.moods?.arguing, { note_a: title(arg.a), note_b: title(arg.b) }) };
+  if (arg) { // a = older (coral), b = newer (violet); quote their own words, old first
+    const txt = id => excerpt(store.notes.find(n => n.id === id)?.text);
+    return { key: 'arguing:' + arg.id, text: choose(L.moods?.arguing, { note_a: txt(arg.a), note_b: txt(arg.b) }) };
+  }
   const sug = openSuggestion(store);
   if (sug) return { key: 'suggesting:' + sug.id, text: choose(L.flags?.suggesting, { note_a: title(sug.from), note_b: title(sug.to) }) };
   if (c.mood === 'curious' && lastNoteId) return { key: 'curious:' + lastNoteId, text: choose(L.moods?.curious, { note: title(lastNoteId) }) };
   if (c.mood === 'hungry') { const d = droopingLimb(store, hunger); return { key: 'hungry:' + d.topic, text: choose(L.moods?.hungry, { topic: low(d.topic), note: low(d.note) }) }; }
   if (f.full) {
     const ids = new Set(f.fullCluster || []), ns = store.notes.filter(n => ids.has(n.id));
-    const topic = ns.find(n => n.topic)?.topic || ns.flatMap(n => n.tags || []).find(t => t !== 'city') || 'this';
+    const count = new Map(); for (const n of ns) if (n.topic) count.set(n.topic, (count.get(n.topic) || 0) + 1);
+    const topic = [...count].sort((a, b) => b[1] - a[1])[0]?.[0] || ns.flatMap(n => n.tags || []).find(t => t !== 'city') || 'this';
     const note = ns.slice().sort((a, b) => ms(b.lastTouchedAt) - ms(a.lastTouchedAt))[0]?.title || '';
     return { key: 'full:' + topic, text: choose(L.flags?.full, { topic: low(topic), note: low(note) }) };
   }
