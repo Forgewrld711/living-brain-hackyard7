@@ -67,7 +67,7 @@ the app can also load these from `voice/waystone-lines.json`.
 - 🦴 all sitting where you put it. i'm fine.
 - content. the threads are holding.
 
-## suggesting
+## flag: suggesting (any mood)
 *(it found a possible link. wait for a yes.)*
 
 - i think '{note_a}' and '{note_b}' belong together. yes?
@@ -79,7 +79,7 @@ the app can also load these from `voice/waystone-lines.json`.
 - found a possible link: '{note_a}' and '{note_b}'. shall i?
 - should '{note_a}' meet '{note_b}'? i'll wait for a yes.
 
-## full
+## flag: full (any mood)
 *(a cluster got dense.)*
 
 - '{note}' is getting heavy. want me to grow a new limb for it?

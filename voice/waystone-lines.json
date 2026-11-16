@@ -7,16 +7,6 @@
     "name": "the name the creature chose"
   },
   "moods": {
-    "suggesting": [
-      "i think '{note_a}' and '{note_b}' belong together. yes?",
-      "'{note_a}' keeps touching '{note_b}'. should they be linked?",
-      "these two feel like neighbors: '{note_a}' and '{note_b}'. yes?",
-      "a faint thread from '{note_a}' to '{note_b}'. want me to light it?",
-      "i'd join '{note_a}' and '{note_b}'. only if you say yes.",
-      "'{note_a}' and '{note_b}' might share a thread. link them?",
-      "found a possible link: '{note_a}' and '{note_b}'. shall i?",
-      "should '{note_a}' meet '{note_b}'? i'll wait for a yes."
-    ],
     "arguing": [
       "you said '{note_a}'. you also said '{note_b}'. which one's true now?",
       "'{note_a}' and '{note_b}' don't agree. which one holds?",
@@ -36,16 +26,6 @@
       "the {topic} limb is a little dim. still on your mind?",
       "🌙 {topic} is still here. feed it, or leave it be?",
       "i've been sitting with '{note}'. more, or is it enough?"
-    ],
-    "full": [
-      "'{note}' is getting heavy. want me to grow a new limb for it?",
-      "the {topic} cluster is dense. a new limb, or leave it?",
-      "'{note}' has a lot around it. grow a limb from here?",
-      "this patch is thick with {topic}. should it sprout?",
-      "🦴 '{note}' is packing tight. want a new branch?",
-      "{topic} is filling out. i can grow a limb if you want.",
-      "a dense spot around '{note}'. split it into a new limb?",
-      "this cluster's getting heavy. grow from '{note}', or wait?"
     ],
     "curious": [
       "ooh. what's this one connected to?",
@@ -76,6 +56,28 @@
       "i've got enough to chew on. i'm good.",
       "🦴 all sitting where you put it. i'm fine.",
       "content. the threads are holding."
+    ]
+  },
+  "flags": {
+    "suggesting": [
+      "i think '{note_a}' and '{note_b}' belong together. yes?",
+      "'{note_a}' keeps touching '{note_b}'. should they be linked?",
+      "these two feel like neighbors: '{note_a}' and '{note_b}'. yes?",
+      "a faint thread from '{note_a}' to '{note_b}'. want me to light it?",
+      "i'd join '{note_a}' and '{note_b}'. only if you say yes.",
+      "'{note_a}' and '{note_b}' might share a thread. link them?",
+      "found a possible link: '{note_a}' and '{note_b}'. shall i?",
+      "should '{note_a}' meet '{note_b}'? i'll wait for a yes."
+    ],
+    "full": [
+      "'{note}' is getting heavy. want me to grow a new limb for it?",
+      "the {topic} cluster is dense. a new limb, or leave it?",
+      "'{note}' has a lot around it. grow a limb from here?",
+      "this patch is thick with {topic}. should it sprout?",
+      "🦴 '{note}' is packing tight. want a new branch?",
+      "{topic} is filling out. i can grow a limb if you want.",
+      "a dense spot around '{note}'. split it into a new limb?",
+      "this cluster's getting heavy. grow from '{note}', or wait?"
     ]
   },
   "first_meal": [
