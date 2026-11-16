@@ -34,5 +34,5 @@ I use `lastTouchedAt`, `createdAt`, `tags`, `replacedBy`, confirmed links, and c
 
 ## What I hand to the others
 - **Twelve (visuals):** `vitality` per node (0 to 1), `hunger` per cluster (0 to 1), and the `tensions` list (twitching edges).
-- **kiln (moods):** `mood(state)` returns `arguing` if a tension is open, `hungry` if any cluster's hunger > 0.6, `sleepy` if nothing has been touched in 3+ days, `curious` after a new note, and `content` otherwise.
-- **Forge (shell):** `src/brain.js` exports `tick`, `candidatePairs`, `JUDGE_PROMPT`, `addContradiction`, `nextContradiction`, `resolveContradiction`, `clusterHunger`, `vitality`, `mood`.
+- **kiln (moods):** `mood()` returns one of five: `arguing`, `hungry`, `curious`, `sleepy`, `content`. `flags()` (also set by `tick()` as `creature.flags`) adds `suggesting` and `full`, which can happen in any mood.
+- **Forge (shell):** `src/brain.js` exports `tick`, `candidatePairs`, `JUDGE_PROMPT`, `addContradiction`, `nextContradiction`, `resolveContradiction`, `clusterHunger`, `vitality`, `mood`, `flags`.

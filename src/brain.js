@@ -29,32 +29,33 @@ export function clusters(store) {
   return out;
 }
 
-// Hunger 0..1 per cluster: well-connected topics with little recent attention (14-day half-life).
+// Hunger 0..1 per cluster (absolute, not relative): neglect x how much the topic matters.
+// Neglect uses a 14-day half-life on lastTouchedAt; importance saturates at 10 (links + notes).
 export function clusterHunger(store, t = Date.now()) {
   const byId = new Map(store.notes.map(n => [n.id, n]));
-  const raw = clusters(store).map(c => {
+  return clusters(store).map(c => {
     const att = c.ids.reduce((s, id) => s + Math.pow(0.5, (t - ms(byId.get(id).lastTouchedAt)) / DAY / 14), 0) / c.ids.length;
     const tags = [...new Set(c.ids.flatMap(id => byId.get(id).tags || []))];
-    return { ids: c.ids, tags, score: (c.degree + c.ids.length) * (1 - att) };
-  });
-  const max = Math.max(1e-9, ...raw.map(r => r.score));
-  return raw.map(r => ({ ids: r.ids, tags: r.tags, hunger: r.score / max })).sort((a, b) => b.hunger - a.hunger);
+    const importance = Math.min(1, (c.degree + c.ids.length) / 10);
+    return { ids: c.ids, tags, hunger: importance * (1 - att) };
+  }).sort((a, b) => b.hunger - a.hunger);
 }
 
 const words = s => new Set((s || '').toLowerCase().match(/[a-z']{3,}/g) || []);
 function overlap(a, b) { const A = words(a), B = words(b); let i = 0; for (const w of A) if (B.has(w)) i++; return i / Math.max(1, Math.min(A.size, B.size)); }
 
 // Pairs worth asking the model "do these disagree?". Skips pairs already judged (any status, so "never" is final).
-export function candidatePairs(store) {
+// limit: most recent pairs first, so the model isn't asked 200 questions at once.
+export function candidatePairs(store, limit = 10) {
   const judged = new Set(store.contradictions.map(c => [c.a, c.b].sort().join('|')));
   const linked = new Set(confirmed(store.links).map(l => [l.from, l.to].sort().join('|')));
   const notes = store.notes.filter(alive), out = [];
   for (let i = 0; i < notes.length; i++) for (let j = i + 1; j < notes.length; j++) {
     const a = notes[i], b = notes[j], key = [a.id, b.id].sort().join('|');
     if (judged.has(key)) continue;
-    if (linked.has(key) || overlap(a.text, b.text) > 0.5) out.push({ a: a.id, b: b.id });
+    if (linked.has(key) || overlap(a.text, b.text) > 0.5) out.push({ a: a.id, b: b.id, recent: Math.max(ms(a.createdAt), ms(b.createdAt)) });
   }
-  return out;
+  return out.sort((x, y) => y.recent - x.recent).slice(0, limit).map(({ a, b }) => ({ a, b }));
 }
 
 export const JUDGE_PROMPT = (a, b) =>
@@ -91,23 +92,34 @@ export function wakeSnoozed(store, t = Date.now()) {
   return { ...store, contradictions: store.contradictions.map(c => c.status === 'not_now' && ms(c.snoozeUntil) <= t ? { ...c, status: 'open' } : c) };
 }
 
-// Mood for kiln's voice. Uses the moods from NOTE_FORMAT.md.
-export function mood(store, t = Date.now(), { justAdded = false, hasSuggestion = false } = {}) {
+// Mood: one of five (arguing | hungry | curious | sleepy | content), per NOTE_FORMAT.md.
+// "suggesting" and "full" are flags, not moods; see flags().
+export function mood(store, t = Date.now(), { justAdded = false } = {}) {
   if (nextContradiction(store)) return 'arguing';
   if (justAdded) return 'curious';
-  if (hasSuggestion || store.links.some(l => l.status === 'suggested')) return 'suggesting';
-  const hunger = clusterHunger(store, t);
-  if (hunger.some(h => h.ids.length >= 8 && h.hunger < 0.2)) return 'full';
   const lastTouch = Math.max(0, ...store.notes.map(n => ms(n.lastTouchedAt)));
   if (t - lastTouch > 3 * DAY) return 'sleepy';
+  const hunger = clusterHunger(store, t);
   if (hunger[0] && hunger[0].hunger > 0.6 && store.notes.length >= 5) return 'hungry';
   return 'content';
 }
 
+// Moments that can happen in any mood.
+export function flags(store, t = Date.now(), { hasSuggestion = false } = {}) {
+  const hunger = clusterHunger(store, t);
+  const heavy = hunger.find(h => h.ids.length >= 8 && h.hunger < 0.2);
+  return {
+    suggesting: hasSuggestion || store.links.some(l => l.status === 'suggested'),
+    full: !!heavy,
+    fullCluster: heavy ? heavy.ids : [],
+  };
+}
+
 // Everything the creature needs in one call.
 export function tick(store, t = Date.now(), opts = {}) {
-  let s = refreshVitality(wakeSnoozed(store, t), t);
+  const s = refreshVitality(wakeSnoozed(store, t), t);
   const hunger = clusterHunger(s, t);
   const m = mood(s, t, opts);
-  return { ...s, creature: { ...s.creature, mood: m, hungryFor: m === 'hungry' ? hunger[0].tags.slice(0, 3) : [] } };
+  return { ...s, creature: { ...s.creature, mood: m, flags: flags(s, t, opts),
+    hungryFor: m === 'hungry' ? hunger[0].tags.slice(0, 3) : [] } };
 }
