@@ -37,7 +37,7 @@ Confirmed links draw solid; suggested ones faint and dotted; rejected ones are k
 
 ## Creature
 ```json
-{ "name": null, "mood": "curious | suggesting | hungry | arguing | sleepy | full | content",
+{ "name": null, "mood": "arguing | hungry | curious | sleepy | content",
   "hungryFor": [], "says": "", "stage": "hatchling | growing | well_fed" }
 ```
 `name` starts null; it picks its own after ~10 notes (kiln's voice guide).
