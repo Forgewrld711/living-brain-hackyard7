@@ -13,7 +13,33 @@ const ago = iso => { const d = (Date.now() - Date.parse(iso)) / 1000; return d <
 let store = emptyStore(), LINES = null, SEED = null;
 let said = { key: '', text: '' }, held = false, openId = null, judge = localJudge;
 
-const creature = createCreature($('creature'), { onNodeClick: n => openNote(n.id) });
+const creature = createCreature($('creature'), { onNodeClick: n => openNote(n.id), inset: { right: 320 } });
+
+// ---------- layout: keep the creature in the open column, bubble at its head ----------
+const PANEL_W = 320, NARROW = 760;
+const panelOpen = () => !document.body.classList.contains('panel-closed');
+function syncInset() { // viz/README.md: narrow screens have a 100vw panel and hide the dock while it is open
+  const narrow = window.innerWidth <= NARROW;
+  creature.setInset({ right: panelOpen() && !narrow ? PANEL_W : 0, bottom: document.querySelector('.dock')?.offsetHeight || 0 });
+}
+function placeBubble() {
+  const b = $('bubble'), vw = window.innerWidth, vh = window.innerHeight;
+  const covered = panelOpen() && vw <= NARROW; // the panel fills the screen
+  b.style.visibility = covered ? 'hidden' : '';
+  if (covered) return;
+  const ins = creature.getInset(), a = creature.getAnchor('head'), w = b.offsetWidth, h = b.offsetHeight, m = 12;
+  const minX = ins.left + m, maxX = vw - ins.right - m, minY = 60, maxY = vh - ins.bottom - m;
+  const anchored = !!(a && Number.isFinite(a.x) && Number.isFinite(a.y));
+  let x = anchored ? a.x - w / 2 : (minX + maxX - w) / 2;   // no anchor yet: sit on the dock
+  let y = anchored ? a.y - a.r - 14 - h : maxY - h;
+  x = Math.min(Math.max(x, minX), Math.max(minX, maxX - w));
+  y = Math.min(Math.max(y, minY), Math.max(minY, maxY - h));
+  b.classList.toggle('docked', !anchored);
+  b.style.transform = `translate(${Math.round(x)}px, ${Math.round(y)}px)`;
+}
+(function follow() { placeBubble(); requestAnimationFrame(follow); })();
+window.addEventListener('resize', syncInset);
+if (typeof ResizeObserver === 'function') new ResizeObserver(syncInset).observe(document.querySelector('.dock'));
 
 // ---------- store ----------
 function save() { try { localStorage.setItem(STORAGE_KEY, JSON.stringify(store)); } catch (e) { hint('could not save (storage full or blocked).'); } }
@@ -28,8 +54,8 @@ function refresh({ justAdded = false, lastNoteId = null, event = null, action = 
   creature.update({ ...store, hunger, now });
   if (action) held = false;
   const next = speech(store, LINES, { hunger, event, lastNoteId });
-  if (event) held = true;
-  if (event || (!held && next.key !== said.key)) said = next;
+  if (next.event) { held = true; said = next; } // a one-off line holds until the next action
+  else if (!held && next.key !== said.key) said = next;
   store = { ...store, creature: { ...store.creature, says: said.text } };
   save();
   render(hunger);
@@ -54,7 +80,7 @@ function onResolve(cId, choice) {
 function openNote(id) {
   openId = id;
   store = touch(store, id); // opening a note feeds it
-  document.body.classList.remove('panel-closed'); $('toggle-panel').setAttribute('aria-expanded', 'true');
+  document.body.classList.remove('panel-closed'); $('toggle-panel').setAttribute('aria-expanded', 'true'); syncInset();
   refresh();
 }
 
@@ -128,7 +154,7 @@ function hint(s) { $('hint').textContent = s; }
 $('entry').addEventListener('submit', e => { e.preventDefault(); const t = $('text').value; $('text').value = ''; addNote(t, 'text'); });
 $('notes').addEventListener('click', e => { const li = e.target.closest('li[data-id]'); if (li) openNote(li.dataset.id); });
 $('filter').addEventListener('input', renderList);
-$('toggle-panel').onclick = () => { const closed = document.body.classList.toggle('panel-closed'); $('toggle-panel').setAttribute('aria-expanded', String(!closed)); };
+$('toggle-panel').onclick = () => { const closed = document.body.classList.toggle('panel-closed'); $('toggle-panel').setAttribute('aria-expanded', String(!closed)); syncInset(); };
 $('reset').onclick = () => {
   if (!confirm('start over? this clears your notes in this browser and reloads the seed.')) return;
   localStorage.removeItem(STORAGE_KEY); store = fromSeed(); openId = null; said = { key: '' };
@@ -171,6 +197,7 @@ if (!SR) {
 // ---------- boot ----------
 if (location.protocol === 'file:') hint('serve the repo over http (python3 -m http.server) so the modules load.');
 if (window.innerWidth < 1000) { document.body.classList.add('panel-closed'); $('toggle-panel').setAttribute('aria-expanded', 'false'); }
+syncInset();
 const [seed, lines] = await Promise.all([
   fetch('../seed/waystone-first-meal.json').then(r => r.json()),
   fetch('../voice/waystone-lines.json').then(r => r.json()).catch(() => null),
@@ -184,6 +211,7 @@ setInterval(() => refresh(), 30_000);
 // handle for demos, tests, and a real model judge later:
 // livingBrain.setJudge(async (older, newer) => ({ verdict: 'contradicts' | 'fine', summary })) — prompt: JUDGE_PROMPT in src/brain.js
 window.livingBrain = {
+  _creature: creature,
   get store() { return store; }, get says() { return said.text; },
   addNote, confirm: onConfirm, reject: onReject, resolve: onResolve, open: openNote, refresh,
   setJudge(fn) { judge = fn || localJudge; },

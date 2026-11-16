@@ -75,3 +75,16 @@ console.log('T3 mood', h2.creature.mood, hu2[0].hunger.toFixed(2), S.speech(h2, 
   assert.equal(S.excerpt('one two three four five six (seven eight nine ten'), 'one two three four five six…');
   console.log('TOPIC OK');
 }
+
+{ // greeting only for a hatchling; a well-fed creature speaks by mood/flags
+  const fed = S.tick(structuredClone(seed));
+  const sp = S.speech(fed, lines, { event: 'first_meal', hunger: S.clusterHunger(fed), pick: () => 0 });
+  console.log('well-fed first run:', fed.creature.stage, '->', sp.key, '|', sp.text);
+  assert.notEqual(fed.creature.stage, 'hatchling'); assert.notEqual(sp.key, 'first_meal'); assert.ok(!sp.event);
+  assert.ok(!lines.first_meal.includes(sp.text));
+  const small = S.tick({ ...structuredClone(seed), notes: seed.notes.slice(0, 5), links: [] });
+  const sp2 = S.speech(small, lines, { event: 'first_meal', pick: () => 0 });
+  console.log('hatchling first run:', small.creature.stage, '->', sp2.key, '|', sp2.text);
+  assert.equal(sp2.key, 'first_meal'); assert.ok(sp2.event);
+  console.log('GREETING OK');
+}

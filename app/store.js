@@ -208,9 +208,11 @@ export function speech(store, lines, { hunger, event, lastNoteId, pick = Math.ra
   const L = lines || {}, c = store.creature || {}, f = c.flags || {};
   const choose = (arr, v) => fill(arr && arr.length ? arr[Math.floor(pick() * arr.length) % arr.length] : '', v);
   const title = id => low(store.notes.find(n => n.id === id)?.title);
-  if (event === 'first_meal') return { key: 'first_meal', text: choose(L.first_meal, {}) };
-  if (event === 'named') return { key: 'named', text: choose(L.naming, { name: c.name }) };
-  if (event === 'after_no') return { key: 'after_no:' + Date.now(), text: choose(L.after_no, {}) };
+  // the greeting is a hatchling's line: only when tick() says hatchling, or very few live notes
+  const hatchling = c.stage === 'hatchling' || store.notes.filter(alive).length < 8;
+  if (event === 'first_meal' && hatchling) return { key: 'first_meal', text: choose(L.first_meal, {}), event: true };
+  if (event === 'named') return { key: 'named', text: choose(L.naming, { name: c.name }), event: true };
+  if (event === 'after_no') return { key: 'after_no:' + Date.now(), text: choose(L.after_no, {}), event: true };
   const arg = nextContradiction(store);
   if (arg) { // a = older (coral), b = newer (violet); quote their own words, old first
     const txt = id => excerpt(store.notes.find(n => n.id === id)?.text);
