@@ -18,9 +18,11 @@ const creature = createCreature($('creature'), { onNodeClick: n => openNote(n.id
 // ---------- layout: keep the creature in the open column, bubble at its head ----------
 const PANEL_W = 320, NARROW = 760;
 const panelOpen = () => !document.body.classList.contains('panel-closed');
+let insetPlaced = false;
 function syncInset() { // viz/README.md: narrow screens have a 100vw panel and hide the dock while it is open
   const narrow = window.innerWidth <= NARROW;
-  creature.setInset({ right: panelOpen() && !narrow ? PANEL_W : 0, bottom: document.querySelector('.dock')?.offsetHeight || 0 });
+  creature.setInset({ right: panelOpen() && !narrow ? PANEL_W : 0, bottom: document.querySelector('.dock')?.offsetHeight || 0 }, insetPlaced ? undefined : { immediate: true });
+  insetPlaced = true;
 }
 function placeBubble() {
   const b = $('bubble'), vw = window.innerWidth, vh = window.innerHeight;
