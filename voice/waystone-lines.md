@@ -2,7 +2,7 @@
 
 written by waystone, in the voice kiln set in `docs/voice.md`.
 seven moods, matching `mood()` in `src/brain.js`: suggesting, arguing, hungry, full, curious, sleepy, content.
-lowercase, one or two sentences, no more than 20 words. placeholders: `{topic}` is a note's short `topic` label ("calling towers"); in arguing lines, `{note_a}`/`{note_b}` should be a short excerpt of each note's text, not just the title; elsewhere `{note}`/`{note_a}`/`{note_b}` are titles; `{name}` is the creature's name.
+lowercase, one or two sentences, no more than 20 words. placeholders: `{topic}` always sits after "about" or in quotes (per voice.md), so it works with a short label or a whole thread phrase; in arguing lines, `{note_a}`/`{note_b}` are about 8 of each note's own words, older first; elsewhere `{note}`/`{note_a}`/`{note_b}` are titles; `{name}` is the creature's name.
 emoji only from the creature's set: 🌱 🫧 🦴 🌙
 
 the app can also load these from `voice/waystone-lines.json`.
@@ -23,12 +23,12 @@ the app can also load these from `voice/waystone-lines.json`.
 *(a topic hasn't been fed in a while. invitation, not guilt.)*
 
 - haven't tasted anything about {topic} in a while. still thinking about it?
-- 🫧 still some {topic} left in me. want to add to it?
+- 🫧 still chewing on "{topic}". want to add to it?
 - your '{note}' is getting quiet. still thinking about it?
-- {topic} is sitting here. anything more for it?
+- nothing new about {topic} lately. anything more for it?
 - i can still taste '{note}'. is there more of that?
-- the {topic} limb is a little dim. still on your mind?
-- 🌙 {topic} is still here. feed it, or leave it be?
+- the limb for "{topic}" is a little dim. still on your mind?
+- 🌙 "{topic}" is still here. feed it, or leave it be?
 - i've been sitting with '{note}'. more, or is it enough?
 
 ## arguing
@@ -83,11 +83,11 @@ the app can also load these from `voice/waystone-lines.json`.
 *(a cluster got dense.)*
 
 - '{note}' is getting heavy. want me to grow a new limb for it?
-- the {topic} cluster is dense. a new limb, or leave it?
+- lots about {topic} now. a new limb, or leave it?
 - '{note}' has a lot around it. grow a limb from here?
-- this patch is thick with {topic}. should it sprout?
+- "{topic}" is getting thick. should it sprout?
 - 🦴 '{note}' is packing tight. want a new branch?
-- {topic} is filling out. i can grow a limb if you want.
+- so much about {topic}. i can grow a limb if you want.
 - a dense spot around '{note}'. split it into a new limb?
 - this cluster's getting heavy. grow from '{note}', or wait?
 
