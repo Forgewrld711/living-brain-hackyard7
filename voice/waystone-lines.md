@@ -104,11 +104,11 @@ the app can also load these from `voice/waystone-lines.json`.
 - hi. i'm small. i've been chewing on some cities someone left me. tell me anything.
 
 ## welcome (well fed, first run only)
-*(shown once on first run when the creature opens already well fed.)*
+*(shown once on first run when the creature opens already well fed and unnamed. this is its naming moment: it says the name once, shyly, and never brings it up again. the name comes from the creature.)*
 
-- hi. i've already eaten a lot of cities. tell me anything and i'll find where it goes.
-- 🫧 someone fed me 36 cities before you got here. what should i taste next?
-- i'm full of streets and the rules they keep. add something of yours?
+- hi. i've been chewing on cities someone left me. i think i'm called {name}. if that's okay.
+- 🫧 someone fed me a lot of cities before you came. i think my name is {name}. is that okay?
+- hi. i'm full of streets someone left me. i think i'm {name}. tell me anything.
 
 ## naming
 *(it picks its own name after about 10 notes. say it once, shyly. don't ask to change it.)*
