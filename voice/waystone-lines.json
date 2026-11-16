@@ -90,6 +90,11 @@
     "hi. i'm small. tell me anything and i'll find where it goes.",
     "hi. i'm small. i've been chewing on some cities someone left me. tell me anything."
   ],
+  "welcome_well_fed": [
+    "hi. i've already eaten a lot of cities. tell me anything and i'll find where it goes.",
+    "🫧 someone fed me 36 cities before you got here. what should i taste next?",
+    "i'm full of streets and the rules they keep. add something of yours?"
+  ],
   "naming": [
     "i think i'm {name}.",
     "🌱 i've been chewing on a name. i think i'm {name}.",

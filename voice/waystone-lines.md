@@ -103,6 +103,13 @@ the app can also load these from `voice/waystone-lines.json`.
 - hi. i'm small. tell me anything and i'll find where it goes.
 - hi. i'm small. i've been chewing on some cities someone left me. tell me anything.
 
+## welcome (well fed, first run only)
+*(shown once on first run when the creature opens already well fed.)*
+
+- hi. i've already eaten a lot of cities. tell me anything and i'll find where it goes.
+- 🫧 someone fed me 36 cities before you got here. what should i taste next?
+- i'm full of streets and the rules they keep. add something of yours?
+
 ## naming
 *(it picks its own name after about 10 notes. say it once, shyly. don't ask to change it.)*
 
