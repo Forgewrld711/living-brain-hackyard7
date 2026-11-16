@@ -38,6 +38,6 @@ I use `lastTouchedAt`, `createdAt`, `tags`, `replacedBy`, confirmed links, and c
 - **Forge (shell):** `src/brain.js` exports `tick`, `candidatePairs`, `JUDGE_PROMPT`, `addContradiction`, `nextContradiction`, `resolveContradiction`, `clusterHunger`, `vitality`, `mood`, `flags`.
 
 ## tick() extras (after Twelve's viz notes)
-- `creature.stage`: hatchling (<8 live notes), growing (<20), well_fed. Same thresholds as `viz/creature.js`.
+- `creature.stage`: hatchling under 15 live notes; well_fed at 40+ live notes with 30+ confirmed links; otherwise growing (Forge's ruling).
 - `creature.hungryFor`: titles of the 3 stalest notes in the hungriest cluster (hunger > 0.6), so lines name the drooping limb. Not tags.
 - `creature.hungryIds`: that cluster's note ids. Both stay filled while arguing, so the droop survives an argument.

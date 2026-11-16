@@ -129,5 +129,5 @@ export function tick(store, t = Date.now(), opts = {}) {
   return { ...s, creature: { ...s.creature, mood: m, flags: flags(s, t, opts),
     hungryFor: stalest.slice(0, 3).map(id => byId.get(id).title),
     hungryIds: top ? top.ids : [],
-    stage: live < 8 ? 'hatchling' : live < 20 ? 'growing' : 'well_fed' } };
+    stage: live < 15 ? 'hatchling' : (live >= 40 && confirmed(s.links).length >= 30) ? 'well_fed' : 'growing' } };
 }
