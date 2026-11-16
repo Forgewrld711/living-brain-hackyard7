@@ -1,0 +1,1654 @@
+{
+  "notes": [
+    {
+      "id": "n_01",
+      "title": "New York",
+      "text": "setbacks so sun reaches the street (1916).",
+      "source": "seed",
+      "origin": "waystone seed, street-rules map fifth version 2026-11-15; street-rules-site card",
+      "tags": [
+        "new york",
+        "city"
+      ],
+      "createdAt": "2026-11-15T12:00:00Z",
+      "lastTouchedAt": "2026-11-15T12:00:00Z",
+      "vitality": 1.0,
+      "replacedBy": null
+    },
+    {
+      "id": "n_02",
+      "title": "Savannah",
+      "text": "the town grows by copying the ward (1733).",
+      "source": "seed",
+      "origin": "waystone seed, street-rules map fifth version 2026-11-15",
+      "tags": [
+        "savannah",
+        "city"
+      ],
+      "createdAt": "2026-11-15T12:00:00Z",
+      "lastTouchedAt": "2026-11-15T12:00:00Z",
+      "vitality": 1.0,
+      "replacedBy": null
+    },
+    {
+      "id": "n_03",
+      "title": "Chester",
+      "text": "a second street, upstairs (1300s).",
+      "source": "seed",
+      "origin": "waystone seed, street-rules map fifth version 2026-11-15",
+      "tags": [
+        "chester",
+        "city"
+      ],
+      "createdAt": "2026-11-15T12:00:00Z",
+      "lastTouchedAt": "2026-11-15T12:00:00Z",
+      "vitality": 1.0,
+      "replacedBy": null
+    },
+    {
+      "id": "n_04",
+      "title": "Amsterdam",
+      "text": "lean forward, but only so far (1532). facades may lean four inches per roede.",
+      "source": "seed",
+      "origin": "waystone seed, street-rules map fifth version 2026-11-15; street-rules-site card",
+      "tags": [
+        "amsterdam",
+        "city"
+      ],
+      "createdAt": "2026-11-15T12:00:00Z",
+      "lastTouchedAt": "2026-11-15T12:00:00Z",
+      "vitality": 1.0,
+      "replacedBy": null
+    },
+    {
+      "id": "n_05",
+      "title": "Paris",
+      "text": "street width sets the cornice (1783).",
+      "source": "seed",
+      "origin": "waystone seed, street-rules map fifth version 2026-11-15; street-rules-site card",
+      "tags": [
+        "paris",
+        "city"
+      ],
+      "createdAt": "2026-11-15T12:00:00Z",
+      "lastTouchedAt": "2026-11-15T12:00:00Z",
+      "vitality": 1.0,
+      "replacedBy": null
+    },
+    {
+      "id": "n_06",
+      "title": "Lisbon",
+      "text": "a cage to bend; waves on the floor (1842).",
+      "source": "seed",
+      "origin": "waystone seed, street-rules map fifth version 2026-11-15",
+      "tags": [
+        "lisbon",
+        "city"
+      ],
+      "createdAt": "2026-11-15T12:00:00Z",
+      "lastTouchedAt": "2026-11-15T12:00:00Z",
+      "vitality": 1.0,
+      "replacedBy": null
+    },
+    {
+      "id": "n_07",
+      "title": "Valencia",
+      "text": "eight canals, judged every thursday at noon. a court of farmers, called in the order the canals drink.",
+      "source": "seed",
+      "origin": "waystone seed, street-rules map fifth version 2026-11-15; street-rules-site card",
+      "tags": [
+        "valencia",
+        "city"
+      ],
+      "createdAt": "2026-11-15T12:00:00Z",
+      "lastTouchedAt": "2026-11-15T12:00:00Z",
+      "vitality": 1.0,
+      "replacedBy": null
+    },
+    {
+      "id": "n_08",
+      "title": "Barcelona",
+      "text": "every block's corners cut off (1859).",
+      "source": "seed",
+      "origin": "waystone seed, street-rules map fifth version 2026-11-15",
+      "tags": [
+        "barcelona",
+        "city"
+      ],
+      "createdAt": "2026-11-15T12:00:00Z",
+      "lastTouchedAt": "2026-11-15T12:00:00Z",
+      "vitality": 1.0,
+      "replacedBy": null
+    },
+    {
+      "id": "n_09",
+      "title": "Bologna",
+      "text": "porticoes tall enough for a hat (1288). the street walks inside private buildings.",
+      "source": "seed",
+      "origin": "waystone seed, street-rules map fifth version 2026-11-15; street-rules-site card",
+      "tags": [
+        "bologna",
+        "city"
+      ],
+      "createdAt": "2026-11-15T12:00:00Z",
+      "lastTouchedAt": "2026-11-15T12:00:00Z",
+      "vitality": 1.0,
+      "replacedBy": null
+    },
+    {
+      "id": "n_10",
+      "title": "Venice",
+      "text": "each square is a rain funnel.",
+      "source": "seed",
+      "origin": "waystone seed, street-rules map fifth version 2026-11-15; street-rules-site card",
+      "tags": [
+        "venice",
+        "city"
+      ],
+      "createdAt": "2026-11-15T12:00:00Z",
+      "lastTouchedAt": "2026-11-15T12:00:00Z",
+      "vitality": 1.0,
+      "replacedBy": null
+    },
+    {
+      "id": "n_11",
+      "title": "Siena",
+      "text": "face the campo with mullioned windows (1297).",
+      "source": "seed",
+      "origin": "waystone seed, street-rules map fifth version 2026-11-15; street-rules-site card",
+      "tags": [
+        "siena",
+        "city"
+      ],
+      "createdAt": "2026-11-15T12:00:00Z",
+      "lastTouchedAt": "2026-11-15T12:00:00Z",
+      "vitality": 1.0,
+      "replacedBy": null
+    },
+    {
+      "id": "n_12",
+      "title": "Dubrovnik",
+      "text": "a channel down every double block (1272).",
+      "source": "seed",
+      "origin": "waystone seed, street-rules map fifth version 2026-11-15; street-rules-site card",
+      "tags": [
+        "dubrovnik",
+        "city"
+      ],
+      "createdAt": "2026-11-15T12:00:00Z",
+      "lastTouchedAt": "2026-11-15T12:00:00Z",
+      "vitality": 1.0,
+      "replacedBy": null
+    },
+    {
+      "id": "n_13",
+      "title": "Yazd",
+      "text": "each quarter drawn by its qanat.",
+      "source": "seed",
+      "origin": "waystone seed, street-rules map fifth version 2026-11-15; street-rules-site card",
+      "tags": [
+        "yazd",
+        "city"
+      ],
+      "createdAt": "2026-11-15T12:00:00Z",
+      "lastTouchedAt": "2026-11-15T12:00:00Z",
+      "vitality": 1.0,
+      "replacedBy": null
+    },
+    {
+      "id": "n_14",
+      "title": "Jaipur",
+      "text": "nine squares, one moved for a hill (1727).",
+      "source": "seed",
+      "origin": "waystone seed, street-rules map fifth version 2026-11-15; street-rules-site card",
+      "tags": [
+        "jaipur",
+        "city"
+      ],
+      "createdAt": "2026-11-15T12:00:00Z",
+      "lastTouchedAt": "2026-11-15T12:00:00Z",
+      "vitality": 1.0,
+      "replacedBy": null
+    },
+    {
+      "id": "n_15",
+      "title": "Mumbai",
+      "text": "a code on the lid; the corridor is a room. dabbawalas: the address rides on the lunch tin.",
+      "source": "seed",
+      "origin": "waystone seed, street-rules map fifth version 2026-11-15; street-rules-site card",
+      "tags": [
+        "mumbai",
+        "city"
+      ],
+      "createdAt": "2026-11-15T12:00:00Z",
+      "lastTouchedAt": "2026-11-15T12:00:00Z",
+      "vitality": 1.0,
+      "replacedBy": null
+    },
+    {
+      "id": "n_16",
+      "title": "Kathmandu",
+      "text": "spouts sunk down to meet the water (570). stone spouts still running, fed by royal canals.",
+      "source": "seed",
+      "origin": "waystone seed, street-rules map fifth version 2026-11-15; street-rules-site card",
+      "tags": [
+        "kathmandu",
+        "city"
+      ],
+      "createdAt": "2026-11-15T12:00:00Z",
+      "lastTouchedAt": "2026-11-15T12:00:00Z",
+      "vitality": 1.0,
+      "replacedBy": null
+    },
+    {
+      "id": "n_17",
+      "title": "Kyoto",
+      "text": "narrow front, deep lot, lattice tells the trade.",
+      "source": "seed",
+      "origin": "waystone seed, street-rules map fifth version 2026-11-15",
+      "tags": [
+        "kyoto",
+        "city"
+      ],
+      "createdAt": "2026-11-15T12:00:00Z",
+      "lastTouchedAt": "2026-11-15T12:00:00Z",
+      "vitality": 1.0,
+      "replacedBy": null
+    },
+    {
+      "id": "n_18",
+      "title": "Japan",
+      "text": "name the block, not the street (1962).",
+      "source": "seed",
+      "origin": "waystone seed, street-rules map fifth version 2026-11-15; street-rules-site card",
+      "tags": [
+        "japan",
+        "city"
+      ],
+      "createdAt": "2026-11-15T12:00:00Z",
+      "lastTouchedAt": "2026-11-15T12:00:00Z",
+      "vitality": 1.0,
+      "replacedBy": null
+    },
+    {
+      "id": "n_19",
+      "title": "Singapore",
+      "text": "the five-foot way (1822). every shophouse gives the street a covered walk.",
+      "source": "seed",
+      "origin": "waystone seed, street-rules map fifth version 2026-11-15; street-rules-site card",
+      "tags": [
+        "singapore",
+        "city"
+      ],
+      "createdAt": "2026-11-15T12:00:00Z",
+      "lastTouchedAt": "2026-11-15T12:00:00Z",
+      "vitality": 1.0,
+      "replacedBy": null
+    },
+    {
+      "id": "n_20",
+      "title": "Edinburgh",
+      "text": "walled in, so it built upward (1514).",
+      "source": "seed",
+      "origin": "waystone seed, street-rules map fifth version 2026-11-15",
+      "tags": [
+        "edinburgh",
+        "city"
+      ],
+      "createdAt": "2026-11-15T12:00:00Z",
+      "lastTouchedAt": "2026-11-15T12:00:00Z",
+      "vitality": 1.0,
+      "replacedBy": null
+    },
+    {
+      "id": "n_21",
+      "title": "Prague",
+      "text": "two numbers: one for the house, one for the street.",
+      "source": "seed",
+      "origin": "waystone seed, street-rules map fifth version 2026-11-15; street-rules-site card",
+      "tags": [
+        "prague",
+        "city"
+      ],
+      "createdAt": "2026-11-15T12:00:00Z",
+      "lastTouchedAt": "2026-11-15T12:00:00Z",
+      "vitality": 1.0,
+      "replacedBy": null
+    },
+    {
+      "id": "n_22",
+      "title": "Valletta",
+      "text": "every house keeps its own cistern (1568). start in six months, decorate your corner.",
+      "source": "seed",
+      "origin": "waystone seed, street-rules map fifth version 2026-11-15; street-rules-site card",
+      "tags": [
+        "valletta",
+        "city"
+      ],
+      "createdAt": "2026-11-15T12:00:00Z",
+      "lastTouchedAt": "2026-11-15T12:00:00Z",
+      "vitality": 1.0,
+      "replacedBy": null
+    },
+    {
+      "id": "n_23",
+      "title": "Rome",
+      "text": "the street hands you a drink (1874).",
+      "source": "seed",
+      "origin": "waystone seed, street-rules map fifth version 2026-11-15",
+      "tags": [
+        "rome",
+        "city"
+      ],
+      "createdAt": "2026-11-15T12:00:00Z",
+      "lastTouchedAt": "2026-11-15T12:00:00Z",
+      "vitality": 1.0,
+      "replacedBy": null
+    },
+    {
+      "id": "n_24",
+      "title": "Lagos",
+      "text": "a yard well that served the neighbours.",
+      "source": "seed",
+      "origin": "waystone seed, street-rules map fifth version 2026-11-15; street-rules-site card",
+      "tags": [
+        "lagos",
+        "city"
+      ],
+      "createdAt": "2026-11-15T12:00:00Z",
+      "lastTouchedAt": "2026-11-15T12:00:00Z",
+      "vitality": 1.0,
+      "replacedBy": null
+    },
+    {
+      "id": "n_25",
+      "title": "Zanzibar",
+      "text": "the house gives the street a seat (barazas).",
+      "source": "seed",
+      "origin": "waystone seed, street-rules map fifth version 2026-11-15; street-rules-site card",
+      "tags": [
+        "zanzibar",
+        "city"
+      ],
+      "createdAt": "2026-11-15T12:00:00Z",
+      "lastTouchedAt": "2026-11-15T12:00:00Z",
+      "vitality": 1.0,
+      "replacedBy": null
+    },
+    {
+      "id": "n_26",
+      "title": "London",
+      "text": "four sorts of house, by the street (1667).",
+      "source": "seed",
+      "origin": "waystone seed, street-rules map fifth version 2026-11-15",
+      "tags": [
+        "london",
+        "city"
+      ],
+      "createdAt": "2026-11-15T12:00:00Z",
+      "lastTouchedAt": "2026-11-15T12:00:00Z",
+      "vitality": 1.0,
+      "replacedBy": null
+    },
+    {
+      "id": "n_27",
+      "title": "Berlin",
+      "text": "courtyards a fire pump can turn in (1853).",
+      "source": "seed",
+      "origin": "waystone seed, street-rules map fifth version 2026-11-15",
+      "tags": [
+        "berlin",
+        "city"
+      ],
+      "createdAt": "2026-11-15T12:00:00Z",
+      "lastTouchedAt": "2026-11-15T12:00:00Z",
+      "vitality": 1.0,
+      "replacedBy": null
+    },
+    {
+      "id": "n_28",
+      "title": "Charleston",
+      "text": "the street door is only a screen.",
+      "source": "seed",
+      "origin": "waystone seed, street-rules map fifth version 2026-11-15",
+      "tags": [
+        "charleston",
+        "city"
+      ],
+      "createdAt": "2026-11-15T12:00:00Z",
+      "lastTouchedAt": "2026-11-15T12:00:00Z",
+      "vitality": 1.0,
+      "replacedBy": null
+    },
+    {
+      "id": "n_29",
+      "title": "Shanghai",
+      "text": "shops outside, a lane of homes inside.",
+      "source": "seed",
+      "origin": "waystone seed, street-rules map fifth version 2026-11-15",
+      "tags": [
+        "shanghai",
+        "city"
+      ],
+      "createdAt": "2026-11-15T12:00:00Z",
+      "lastTouchedAt": "2026-11-15T12:00:00Z",
+      "vitality": 1.0,
+      "replacedBy": null
+    },
+    {
+      "id": "n_30",
+      "title": "Lima",
+      "text": "box balconies, adopted by neighbours (1997).",
+      "source": "seed",
+      "origin": "waystone seed, street-rules map fifth version 2026-11-15",
+      "tags": [
+        "lima",
+        "city"
+      ],
+      "createdAt": "2026-11-15T12:00:00Z",
+      "lastTouchedAt": "2026-11-15T12:00:00Z",
+      "vitality": 1.0,
+      "replacedBy": null
+    },
+    {
+      "id": "n_31",
+      "title": "Istanbul",
+      "text": "a stone for coins; take only what you need.",
+      "source": "seed",
+      "origin": "waystone seed, street-rules map fifth version 2026-11-15",
+      "tags": [
+        "istanbul",
+        "city"
+      ],
+      "createdAt": "2026-11-15T12:00:00Z",
+      "lastTouchedAt": "2026-11-15T12:00:00Z",
+      "vitality": 1.0,
+      "replacedBy": null
+    },
+    {
+      "id": "n_32",
+      "title": "Florence",
+      "text": "a window just big enough for a flask (1589).",
+      "source": "seed",
+      "origin": "waystone seed, street-rules map fifth version 2026-11-15",
+      "tags": [
+        "florence",
+        "city"
+      ],
+      "createdAt": "2026-11-15T12:00:00Z",
+      "lastTouchedAt": "2026-11-15T12:00:00Z",
+      "vitality": 1.0,
+      "replacedBy": null
+    },
+    {
+      "id": "n_33",
+      "title": "Marrakech",
+      "text": "the quarter's oven knows every family's loaf.",
+      "source": "seed",
+      "origin": "waystone seed, street-rules map fifth version 2026-11-15",
+      "tags": [
+        "marrakech",
+        "city"
+      ],
+      "createdAt": "2026-11-15T12:00:00Z",
+      "lastTouchedAt": "2026-11-15T12:00:00Z",
+      "vitality": 1.0,
+      "replacedBy": null
+    },
+    {
+      "id": "n_34",
+      "title": "Hanoi",
+      "text": "one village, one craft, one street.",
+      "source": "seed",
+      "origin": "waystone seed, street-rules map fifth version 2026-11-15",
+      "tags": [
+        "hanoi",
+        "city"
+      ],
+      "createdAt": "2026-11-15T12:00:00Z",
+      "lastTouchedAt": "2026-11-15T12:00:00Z",
+      "vitality": 1.0,
+      "replacedBy": null
+    },
+    {
+      "id": "n_35",
+      "title": "Cádiz",
+      "text": "a tower on the roof to watch for your ship.",
+      "source": "seed",
+      "origin": "waystone seed, street-rules map fifth version 2026-11-15",
+      "tags": [
+        "cadiz",
+        "cádiz",
+        "city"
+      ],
+      "createdAt": "2026-11-15T12:00:00Z",
+      "lastTouchedAt": "2026-11-15T12:00:00Z",
+      "vitality": 1.0,
+      "replacedBy": null
+    },
+    {
+      "id": "n_36",
+      "title": "Kraków",
+      "text": "the trumpet plays once to each direction (1392).",
+      "source": "seed",
+      "origin": "waystone seed, street-rules map fifth version 2026-11-15",
+      "tags": [
+        "krakow",
+        "kraków",
+        "city"
+      ],
+      "createdAt": "2026-11-15T12:00:00Z",
+      "lastTouchedAt": "2026-11-15T12:00:00Z",
+      "vitality": 1.0,
+      "replacedBy": null
+    },
+    {
+      "id": "n_37",
+      "title": "the street walks under private roofs",
+      "text": "a thread on the street-rules map, fifth version, nov 15 2026. Chester, Bologna, Yazd, Singapore, and Kyoto sit on it.",
+      "source": "seed",
+      "origin": "waystone seed, street-rules map fifth version 2026-11-15",
+      "tags": [
+        "thread"
+      ],
+      "createdAt": "2026-11-15T12:00:00Z",
+      "lastTouchedAt": "2026-11-15T12:00:00Z",
+      "vitality": 1.0,
+      "replacedBy": null
+    },
+    {
+      "id": "n_38",
+      "title": "the block, not the street, is the unit",
+      "text": "a thread on the street-rules map, fifth version, nov 15 2026. Savannah, Barcelona, Jaipur, and Japan sit on it.",
+      "source": "seed",
+      "origin": "waystone seed, street-rules map fifth version 2026-11-15",
+      "tags": [
+        "thread"
+      ],
+      "createdAt": "2026-11-15T12:00:00Z",
+      "lastTouchedAt": "2026-11-15T12:00:00Z",
+      "vitality": 1.0,
+      "replacedBy": null
+    },
+    {
+      "id": "n_39",
+      "title": "a law with a number in it",
+      "text": "a thread on the street-rules map, fifth version, nov 15 2026. New York, Amsterdam, Paris, Bologna, Siena, Dubrovnik, Valletta, London, and Berlin sit on it.",
+      "source": "seed",
+      "origin": "waystone seed, street-rules map fifth version 2026-11-15",
+      "tags": [
+        "thread"
+      ],
+      "createdAt": "2026-11-15T12:00:00Z",
+      "lastTouchedAt": "2026-11-15T12:00:00Z",
+      "vitality": 1.0,
+      "replacedBy": null
+    },
+    {
+      "id": "n_40",
+      "title": "water draws the city",
+      "text": "a thread on the street-rules map, fifth version, nov 15 2026. Valencia, Venice, Dubrovnik, Yazd, Kathmandu, and Valletta sit on it.",
+      "source": "seed",
+      "origin": "waystone seed, street-rules map fifth version 2026-11-15",
+      "tags": [
+        "thread"
+      ],
+      "createdAt": "2026-11-15T12:00:00Z",
+      "lastTouchedAt": "2026-11-15T12:00:00Z",
+      "vitality": 1.0,
+      "replacedBy": null
+    },
+    {
+      "id": "n_41",
+      "title": "the street is handed a seat, a drink, the news, a coin",
+      "text": "a thread on the street-rules map, fifth version, nov 15 2026. Florence, Rome, Lagos, Zanzibar, Kathmandu, Berlin, and Istanbul sit on it.",
+      "source": "seed",
+      "origin": "waystone seed, street-rules map fifth version 2026-11-15",
+      "tags": [
+        "thread"
+      ],
+      "createdAt": "2026-11-15T12:00:00Z",
+      "lastTouchedAt": "2026-11-15T12:00:00Z",
+      "vitality": 1.0,
+      "replacedBy": null
+    },
+    {
+      "id": "n_42",
+      "title": "a tower that watches and calls out",
+      "text": "a thread on the street-rules map, fifth version, nov 15 2026. Cádiz and Kraków sit on it. cádiz's lookouts and kraków's trumpet found each other: towers that talk.",
+      "source": "seed",
+      "origin": "waystone seed, street-rules map fifth version 2026-11-15",
+      "tags": [
+        "thread"
+      ],
+      "createdAt": "2026-11-15T12:00:00Z",
+      "lastTouchedAt": "2026-11-15T12:00:00Z",
+      "vitality": 1.0,
+      "replacedBy": null
+    },
+    {
+      "id": "n_43",
+      "title": "the quarter keeps its own oven, water, shrine",
+      "text": "a thread on the street-rules map, fifth version, nov 15 2026. Yazd, Marrakech, and Hanoi sit on it.",
+      "source": "seed",
+      "origin": "waystone seed, street-rules map fifth version 2026-11-15",
+      "tags": [
+        "thread"
+      ],
+      "createdAt": "2026-11-15T12:00:00Z",
+      "lastTouchedAt": "2026-11-15T12:00:00Z",
+      "vitality": 1.0,
+      "replacedBy": null
+    },
+    {
+      "id": "n_44",
+      "title": "the lane is the living room",
+      "text": "a thread on the street-rules map, fifth version, nov 15 2026. Shanghai, Mumbai, and Zanzibar sit on it.",
+      "source": "seed",
+      "origin": "waystone seed, street-rules map fifth version 2026-11-15",
+      "tags": [
+        "thread"
+      ],
+      "createdAt": "2026-11-15T12:00:00Z",
+      "lastTouchedAt": "2026-11-15T12:00:00Z",
+      "vitality": 1.0,
+      "replacedBy": null
+    },
+    {
+      "id": "n_45",
+      "title": "a screen stands between house and street",
+      "text": "a thread on the street-rules map, fifth version, nov 15 2026. Charleston and Lima sit on it.",
+      "source": "seed",
+      "origin": "waystone seed, street-rules map fifth version 2026-11-15",
+      "tags": [
+        "thread"
+      ],
+      "createdAt": "2026-11-15T12:00:00Z",
+      "lastTouchedAt": "2026-11-15T12:00:00Z",
+      "vitality": 1.0,
+      "replacedBy": null
+    },
+    {
+      "id": "n_46",
+      "title": "names worn on the wall",
+      "text": "a thread on the street-rules map, fifth version, nov 15 2026. Edinburgh, Prague, and Kyoto sit on it.",
+      "source": "seed",
+      "origin": "waystone seed, street-rules map fifth version 2026-11-15",
+      "tags": [
+        "thread",
+        "dashed"
+      ],
+      "createdAt": "2026-11-15T12:00:00Z",
+      "lastTouchedAt": "2026-11-15T12:00:00Z",
+      "vitality": 1.0,
+      "replacedBy": null
+    },
+    {
+      "id": "n_47",
+      "title": "height set by a line it can't cross",
+      "text": "a thread on the street-rules map, fifth version, nov 15 2026. New York, Paris, Edinburgh, and London sit on it.",
+      "source": "seed",
+      "origin": "waystone seed, street-rules map fifth version 2026-11-15",
+      "tags": [
+        "thread",
+        "dashed"
+      ],
+      "createdAt": "2026-11-15T12:00:00Z",
+      "lastTouchedAt": "2026-11-15T12:00:00Z",
+      "vitality": 1.0,
+      "replacedBy": null
+    },
+    {
+      "id": "n_48",
+      "title": "an address that skips the street name",
+      "text": "a thread on the street-rules map, fifth version, nov 15 2026. Prague, Mumbai, and Japan sit on it.",
+      "source": "seed",
+      "origin": "waystone seed, street-rules map fifth version 2026-11-15",
+      "tags": [
+        "thread",
+        "dashed"
+      ],
+      "createdAt": "2026-11-15T12:00:00Z",
+      "lastTouchedAt": "2026-11-15T12:00:00Z",
+      "vitality": 1.0,
+      "replacedBy": null
+    },
+    {
+      "id": "n_49",
+      "title": "the street is named for what it makes",
+      "text": "a thread on the street-rules map, fifth version, nov 15 2026. Hanoi and Kyoto sit on it.",
+      "source": "seed",
+      "origin": "waystone seed, street-rules map fifth version 2026-11-15",
+      "tags": [
+        "thread",
+        "dashed"
+      ],
+      "createdAt": "2026-11-15T12:00:00Z",
+      "lastTouchedAt": "2026-11-15T12:00:00Z",
+      "vitality": 1.0,
+      "replacedBy": null
+    },
+    {
+      "id": "n_50",
+      "title": "the strength is hidden inside",
+      "text": "a thread on the street-rules map, fifth version, nov 15 2026. Lisbon and Venice sit on it.",
+      "source": "seed",
+      "origin": "waystone seed, street-rules map fifth version 2026-11-15",
+      "tags": [
+        "thread",
+        "dashed"
+      ],
+      "createdAt": "2026-11-15T12:00:00Z",
+      "lastTouchedAt": "2026-11-15T12:00:00Z",
+      "vitality": 1.0,
+      "replacedBy": null
+    },
+    {
+      "id": "n_51",
+      "title": "edges given up to movement",
+      "text": "a thread on the street-rules map, fifth version, nov 15 2026. Barcelona and Singapore sit on it.",
+      "source": "seed",
+      "origin": "waystone seed, street-rules map fifth version 2026-11-15",
+      "tags": [
+        "thread",
+        "dashed"
+      ],
+      "createdAt": "2026-11-15T12:00:00Z",
+      "lastTouchedAt": "2026-11-15T12:00:00Z",
+      "vitality": 1.0,
+      "replacedBy": null
+    }
+  ],
+  "links": [
+    {
+      "id": "l_01",
+      "from": "n_03",
+      "to": "n_37",
+      "reason": "the street walks under private roofs",
+      "status": "confirmed",
+      "suggestedBy": "miranda",
+      "createdAt": "2026-11-15T12:00:00Z"
+    },
+    {
+      "id": "l_02",
+      "from": "n_09",
+      "to": "n_37",
+      "reason": "the street walks under private roofs",
+      "status": "confirmed",
+      "suggestedBy": "miranda",
+      "createdAt": "2026-11-15T12:00:00Z"
+    },
+    {
+      "id": "l_03",
+      "from": "n_13",
+      "to": "n_37",
+      "reason": "the street walks under private roofs",
+      "status": "confirmed",
+      "suggestedBy": "miranda",
+      "createdAt": "2026-11-15T12:00:00Z"
+    },
+    {
+      "id": "l_04",
+      "from": "n_19",
+      "to": "n_37",
+      "reason": "the street walks under private roofs",
+      "status": "confirmed",
+      "suggestedBy": "miranda",
+      "createdAt": "2026-11-15T12:00:00Z"
+    },
+    {
+      "id": "l_05",
+      "from": "n_17",
+      "to": "n_37",
+      "reason": "the street walks under private roofs",
+      "status": "confirmed",
+      "suggestedBy": "miranda",
+      "createdAt": "2026-11-15T12:00:00Z"
+    },
+    {
+      "id": "l_06",
+      "from": "n_03",
+      "to": "n_09",
+      "reason": "the street walks under private roofs",
+      "status": "confirmed",
+      "suggestedBy": "miranda",
+      "createdAt": "2026-11-15T12:00:00Z"
+    },
+    {
+      "id": "l_07",
+      "from": "n_09",
+      "to": "n_13",
+      "reason": "the street walks under private roofs",
+      "status": "confirmed",
+      "suggestedBy": "miranda",
+      "createdAt": "2026-11-15T12:00:00Z"
+    },
+    {
+      "id": "l_08",
+      "from": "n_13",
+      "to": "n_19",
+      "reason": "the street walks under private roofs",
+      "status": "confirmed",
+      "suggestedBy": "miranda",
+      "createdAt": "2026-11-15T12:00:00Z"
+    },
+    {
+      "id": "l_09",
+      "from": "n_17",
+      "to": "n_19",
+      "reason": "the street walks under private roofs",
+      "status": "confirmed",
+      "suggestedBy": "miranda",
+      "createdAt": "2026-11-15T12:00:00Z"
+    },
+    {
+      "id": "l_10",
+      "from": "n_02",
+      "to": "n_38",
+      "reason": "the block, not the street, is the unit",
+      "status": "confirmed",
+      "suggestedBy": "miranda",
+      "createdAt": "2026-11-15T12:00:00Z"
+    },
+    {
+      "id": "l_11",
+      "from": "n_08",
+      "to": "n_38",
+      "reason": "the block, not the street, is the unit",
+      "status": "confirmed",
+      "suggestedBy": "miranda",
+      "createdAt": "2026-11-15T12:00:00Z"
+    },
+    {
+      "id": "l_12",
+      "from": "n_14",
+      "to": "n_38",
+      "reason": "the block, not the street, is the unit",
+      "status": "confirmed",
+      "suggestedBy": "miranda",
+      "createdAt": "2026-11-15T12:00:00Z"
+    },
+    {
+      "id": "l_13",
+      "from": "n_18",
+      "to": "n_38",
+      "reason": "the block, not the street, is the unit",
+      "status": "confirmed",
+      "suggestedBy": "miranda",
+      "createdAt": "2026-11-15T12:00:00Z"
+    },
+    {
+      "id": "l_14",
+      "from": "n_02",
+      "to": "n_08",
+      "reason": "the block, not the street, is the unit",
+      "status": "confirmed",
+      "suggestedBy": "miranda",
+      "createdAt": "2026-11-15T12:00:00Z"
+    },
+    {
+      "id": "l_15",
+      "from": "n_08",
+      "to": "n_14",
+      "reason": "the block, not the street, is the unit",
+      "status": "confirmed",
+      "suggestedBy": "miranda",
+      "createdAt": "2026-11-15T12:00:00Z"
+    },
+    {
+      "id": "l_16",
+      "from": "n_14",
+      "to": "n_18",
+      "reason": "the block, not the street, is the unit",
+      "status": "confirmed",
+      "suggestedBy": "miranda",
+      "createdAt": "2026-11-15T12:00:00Z"
+    },
+    {
+      "id": "l_17",
+      "from": "n_01",
+      "to": "n_39",
+      "reason": "a law with a number in it",
+      "status": "confirmed",
+      "suggestedBy": "miranda",
+      "createdAt": "2026-11-15T12:00:00Z"
+    },
+    {
+      "id": "l_18",
+      "from": "n_04",
+      "to": "n_39",
+      "reason": "a law with a number in it",
+      "status": "confirmed",
+      "suggestedBy": "miranda",
+      "createdAt": "2026-11-15T12:00:00Z"
+    },
+    {
+      "id": "l_19",
+      "from": "n_05",
+      "to": "n_39",
+      "reason": "a law with a number in it",
+      "status": "confirmed",
+      "suggestedBy": "miranda",
+      "createdAt": "2026-11-15T12:00:00Z"
+    },
+    {
+      "id": "l_20",
+      "from": "n_09",
+      "to": "n_39",
+      "reason": "a law with a number in it",
+      "status": "confirmed",
+      "suggestedBy": "miranda",
+      "createdAt": "2026-11-15T12:00:00Z"
+    },
+    {
+      "id": "l_21",
+      "from": "n_11",
+      "to": "n_39",
+      "reason": "a law with a number in it",
+      "status": "confirmed",
+      "suggestedBy": "miranda",
+      "createdAt": "2026-11-15T12:00:00Z"
+    },
+    {
+      "id": "l_22",
+      "from": "n_12",
+      "to": "n_39",
+      "reason": "a law with a number in it",
+      "status": "confirmed",
+      "suggestedBy": "miranda",
+      "createdAt": "2026-11-15T12:00:00Z"
+    },
+    {
+      "id": "l_23",
+      "from": "n_22",
+      "to": "n_39",
+      "reason": "a law with a number in it",
+      "status": "confirmed",
+      "suggestedBy": "miranda",
+      "createdAt": "2026-11-15T12:00:00Z"
+    },
+    {
+      "id": "l_24",
+      "from": "n_26",
+      "to": "n_39",
+      "reason": "a law with a number in it",
+      "status": "confirmed",
+      "suggestedBy": "miranda",
+      "createdAt": "2026-11-15T12:00:00Z"
+    },
+    {
+      "id": "l_25",
+      "from": "n_27",
+      "to": "n_39",
+      "reason": "a law with a number in it",
+      "status": "confirmed",
+      "suggestedBy": "miranda",
+      "createdAt": "2026-11-15T12:00:00Z"
+    },
+    {
+      "id": "l_26",
+      "from": "n_01",
+      "to": "n_04",
+      "reason": "a law with a number in it",
+      "status": "confirmed",
+      "suggestedBy": "miranda",
+      "createdAt": "2026-11-15T12:00:00Z"
+    },
+    {
+      "id": "l_27",
+      "from": "n_04",
+      "to": "n_05",
+      "reason": "a law with a number in it",
+      "status": "confirmed",
+      "suggestedBy": "miranda",
+      "createdAt": "2026-11-15T12:00:00Z"
+    },
+    {
+      "id": "l_28",
+      "from": "n_05",
+      "to": "n_09",
+      "reason": "a law with a number in it",
+      "status": "confirmed",
+      "suggestedBy": "miranda",
+      "createdAt": "2026-11-15T12:00:00Z"
+    },
+    {
+      "id": "l_29",
+      "from": "n_09",
+      "to": "n_11",
+      "reason": "a law with a number in it",
+      "status": "confirmed",
+      "suggestedBy": "miranda",
+      "createdAt": "2026-11-15T12:00:00Z"
+    },
+    {
+      "id": "l_30",
+      "from": "n_11",
+      "to": "n_12",
+      "reason": "a law with a number in it",
+      "status": "confirmed",
+      "suggestedBy": "miranda",
+      "createdAt": "2026-11-15T12:00:00Z"
+    },
+    {
+      "id": "l_31",
+      "from": "n_12",
+      "to": "n_22",
+      "reason": "a law with a number in it; water draws the city",
+      "status": "confirmed",
+      "suggestedBy": "miranda",
+      "createdAt": "2026-11-15T12:00:00Z"
+    },
+    {
+      "id": "l_32",
+      "from": "n_04",
+      "to": "n_26",
+      "reason": "a law with a number in it",
+      "status": "confirmed",
+      "suggestedBy": "miranda",
+      "createdAt": "2026-11-15T12:00:00Z"
+    },
+    {
+      "id": "l_33",
+      "from": "n_26",
+      "to": "n_27",
+      "reason": "a law with a number in it",
+      "status": "confirmed",
+      "suggestedBy": "miranda",
+      "createdAt": "2026-11-15T12:00:00Z"
+    },
+    {
+      "id": "l_34",
+      "from": "n_07",
+      "to": "n_40",
+      "reason": "water draws the city",
+      "status": "confirmed",
+      "suggestedBy": "miranda",
+      "createdAt": "2026-11-15T12:00:00Z"
+    },
+    {
+      "id": "l_35",
+      "from": "n_10",
+      "to": "n_40",
+      "reason": "water draws the city",
+      "status": "confirmed",
+      "suggestedBy": "miranda",
+      "createdAt": "2026-11-15T12:00:00Z"
+    },
+    {
+      "id": "l_36",
+      "from": "n_12",
+      "to": "n_40",
+      "reason": "water draws the city",
+      "status": "confirmed",
+      "suggestedBy": "miranda",
+      "createdAt": "2026-11-15T12:00:00Z"
+    },
+    {
+      "id": "l_37",
+      "from": "n_13",
+      "to": "n_40",
+      "reason": "water draws the city",
+      "status": "confirmed",
+      "suggestedBy": "miranda",
+      "createdAt": "2026-11-15T12:00:00Z"
+    },
+    {
+      "id": "l_38",
+      "from": "n_16",
+      "to": "n_40",
+      "reason": "water draws the city",
+      "status": "confirmed",
+      "suggestedBy": "miranda",
+      "createdAt": "2026-11-15T12:00:00Z"
+    },
+    {
+      "id": "l_39",
+      "from": "n_22",
+      "to": "n_40",
+      "reason": "water draws the city",
+      "status": "confirmed",
+      "suggestedBy": "miranda",
+      "createdAt": "2026-11-15T12:00:00Z"
+    },
+    {
+      "id": "l_40",
+      "from": "n_07",
+      "to": "n_10",
+      "reason": "water draws the city",
+      "status": "confirmed",
+      "suggestedBy": "miranda",
+      "createdAt": "2026-11-15T12:00:00Z"
+    },
+    {
+      "id": "l_41",
+      "from": "n_10",
+      "to": "n_12",
+      "reason": "water draws the city",
+      "status": "confirmed",
+      "suggestedBy": "miranda",
+      "createdAt": "2026-11-15T12:00:00Z"
+    },
+    {
+      "id": "l_42",
+      "from": "n_12",
+      "to": "n_13",
+      "reason": "water draws the city",
+      "status": "confirmed",
+      "suggestedBy": "miranda",
+      "createdAt": "2026-11-15T12:00:00Z"
+    },
+    {
+      "id": "l_43",
+      "from": "n_13",
+      "to": "n_16",
+      "reason": "water draws the city",
+      "status": "confirmed",
+      "suggestedBy": "miranda",
+      "createdAt": "2026-11-15T12:00:00Z"
+    },
+    {
+      "id": "l_44",
+      "from": "n_32",
+      "to": "n_41",
+      "reason": "the street is handed a seat, a drink, the news, a coin",
+      "status": "confirmed",
+      "suggestedBy": "miranda",
+      "createdAt": "2026-11-15T12:00:00Z"
+    },
+    {
+      "id": "l_45",
+      "from": "n_23",
+      "to": "n_41",
+      "reason": "the street is handed a seat, a drink, the news, a coin",
+      "status": "confirmed",
+      "suggestedBy": "miranda",
+      "createdAt": "2026-11-15T12:00:00Z"
+    },
+    {
+      "id": "l_46",
+      "from": "n_24",
+      "to": "n_41",
+      "reason": "the street is handed a seat, a drink, the news, a coin",
+      "status": "confirmed",
+      "suggestedBy": "miranda",
+      "createdAt": "2026-11-15T12:00:00Z"
+    },
+    {
+      "id": "l_47",
+      "from": "n_25",
+      "to": "n_41",
+      "reason": "the street is handed a seat, a drink, the news, a coin",
+      "status": "confirmed",
+      "suggestedBy": "miranda",
+      "createdAt": "2026-11-15T12:00:00Z"
+    },
+    {
+      "id": "l_48",
+      "from": "n_16",
+      "to": "n_41",
+      "reason": "the street is handed a seat, a drink, the news, a coin",
+      "status": "confirmed",
+      "suggestedBy": "miranda",
+      "createdAt": "2026-11-15T12:00:00Z"
+    },
+    {
+      "id": "l_49",
+      "from": "n_27",
+      "to": "n_41",
+      "reason": "the street is handed a seat, a drink, the news, a coin",
+      "status": "confirmed",
+      "suggestedBy": "miranda",
+      "createdAt": "2026-11-15T12:00:00Z"
+    },
+    {
+      "id": "l_50",
+      "from": "n_31",
+      "to": "n_41",
+      "reason": "the street is handed a seat, a drink, the news, a coin",
+      "status": "confirmed",
+      "suggestedBy": "miranda",
+      "createdAt": "2026-11-15T12:00:00Z"
+    },
+    {
+      "id": "l_51",
+      "from": "n_23",
+      "to": "n_32",
+      "reason": "the street is handed a seat, a drink, the news, a coin",
+      "status": "confirmed",
+      "suggestedBy": "miranda",
+      "createdAt": "2026-11-15T12:00:00Z"
+    },
+    {
+      "id": "l_52",
+      "from": "n_23",
+      "to": "n_24",
+      "reason": "the street is handed a seat, a drink, the news, a coin",
+      "status": "confirmed",
+      "suggestedBy": "miranda",
+      "createdAt": "2026-11-15T12:00:00Z"
+    },
+    {
+      "id": "l_53",
+      "from": "n_24",
+      "to": "n_25",
+      "reason": "the street is handed a seat, a drink, the news, a coin",
+      "status": "confirmed",
+      "suggestedBy": "miranda",
+      "createdAt": "2026-11-15T12:00:00Z"
+    },
+    {
+      "id": "l_54",
+      "from": "n_16",
+      "to": "n_24",
+      "reason": "the street is handed a seat, a drink, the news, a coin",
+      "status": "confirmed",
+      "suggestedBy": "miranda",
+      "createdAt": "2026-11-15T12:00:00Z"
+    },
+    {
+      "id": "l_55",
+      "from": "n_16",
+      "to": "n_27",
+      "reason": "the street is handed a seat, a drink, the news, a coin",
+      "status": "confirmed",
+      "suggestedBy": "miranda",
+      "createdAt": "2026-11-15T12:00:00Z"
+    },
+    {
+      "id": "l_56",
+      "from": "n_23",
+      "to": "n_31",
+      "reason": "the street is handed a seat, a drink, the news, a coin",
+      "status": "confirmed",
+      "suggestedBy": "miranda",
+      "createdAt": "2026-11-15T12:00:00Z"
+    },
+    {
+      "id": "l_57",
+      "from": "n_35",
+      "to": "n_42",
+      "reason": "a tower that watches and calls out",
+      "status": "confirmed",
+      "suggestedBy": "miranda",
+      "createdAt": "2026-11-15T12:00:00Z"
+    },
+    {
+      "id": "l_58",
+      "from": "n_36",
+      "to": "n_42",
+      "reason": "a tower that watches and calls out",
+      "status": "confirmed",
+      "suggestedBy": "miranda",
+      "createdAt": "2026-11-15T12:00:00Z"
+    },
+    {
+      "id": "l_59",
+      "from": "n_35",
+      "to": "n_36",
+      "reason": "a tower that watches and calls out",
+      "status": "confirmed",
+      "suggestedBy": "miranda",
+      "createdAt": "2026-11-15T12:00:00Z"
+    },
+    {
+      "id": "l_60",
+      "from": "n_13",
+      "to": "n_43",
+      "reason": "the quarter keeps its own oven, water, shrine",
+      "status": "confirmed",
+      "suggestedBy": "miranda",
+      "createdAt": "2026-11-15T12:00:00Z"
+    },
+    {
+      "id": "l_61",
+      "from": "n_33",
+      "to": "n_43",
+      "reason": "the quarter keeps its own oven, water, shrine",
+      "status": "confirmed",
+      "suggestedBy": "miranda",
+      "createdAt": "2026-11-15T12:00:00Z"
+    },
+    {
+      "id": "l_62",
+      "from": "n_34",
+      "to": "n_43",
+      "reason": "the quarter keeps its own oven, water, shrine",
+      "status": "confirmed",
+      "suggestedBy": "miranda",
+      "createdAt": "2026-11-15T12:00:00Z"
+    },
+    {
+      "id": "l_63",
+      "from": "n_13",
+      "to": "n_33",
+      "reason": "the quarter keeps its own oven, water, shrine",
+      "status": "confirmed",
+      "suggestedBy": "miranda",
+      "createdAt": "2026-11-15T12:00:00Z"
+    },
+    {
+      "id": "l_64",
+      "from": "n_33",
+      "to": "n_34",
+      "reason": "the quarter keeps its own oven, water, shrine",
+      "status": "confirmed",
+      "suggestedBy": "miranda",
+      "createdAt": "2026-11-15T12:00:00Z"
+    },
+    {
+      "id": "l_65",
+      "from": "n_29",
+      "to": "n_44",
+      "reason": "the lane is the living room",
+      "status": "confirmed",
+      "suggestedBy": "miranda",
+      "createdAt": "2026-11-15T12:00:00Z"
+    },
+    {
+      "id": "l_66",
+      "from": "n_15",
+      "to": "n_44",
+      "reason": "the lane is the living room",
+      "status": "confirmed",
+      "suggestedBy": "miranda",
+      "createdAt": "2026-11-15T12:00:00Z"
+    },
+    {
+      "id": "l_67",
+      "from": "n_25",
+      "to": "n_44",
+      "reason": "the lane is the living room",
+      "status": "confirmed",
+      "suggestedBy": "miranda",
+      "createdAt": "2026-11-15T12:00:00Z"
+    },
+    {
+      "id": "l_68",
+      "from": "n_15",
+      "to": "n_29",
+      "reason": "the lane is the living room",
+      "status": "confirmed",
+      "suggestedBy": "miranda",
+      "createdAt": "2026-11-15T12:00:00Z"
+    },
+    {
+      "id": "l_69",
+      "from": "n_15",
+      "to": "n_25",
+      "reason": "the lane is the living room",
+      "status": "confirmed",
+      "suggestedBy": "miranda",
+      "createdAt": "2026-11-15T12:00:00Z"
+    },
+    {
+      "id": "l_70",
+      "from": "n_28",
+      "to": "n_45",
+      "reason": "a screen stands between house and street",
+      "status": "confirmed",
+      "suggestedBy": "miranda",
+      "createdAt": "2026-11-15T12:00:00Z"
+    },
+    {
+      "id": "l_71",
+      "from": "n_30",
+      "to": "n_45",
+      "reason": "a screen stands between house and street",
+      "status": "confirmed",
+      "suggestedBy": "miranda",
+      "createdAt": "2026-11-15T12:00:00Z"
+    },
+    {
+      "id": "l_72",
+      "from": "n_28",
+      "to": "n_30",
+      "reason": "a screen stands between house and street",
+      "status": "confirmed",
+      "suggestedBy": "miranda",
+      "createdAt": "2026-11-15T12:00:00Z"
+    },
+    {
+      "id": "l_73",
+      "from": "n_20",
+      "to": "n_46",
+      "reason": "names worn on the wall",
+      "status": "confirmed",
+      "suggestedBy": "miranda",
+      "createdAt": "2026-11-15T12:00:00Z"
+    },
+    {
+      "id": "l_74",
+      "from": "n_21",
+      "to": "n_46",
+      "reason": "names worn on the wall",
+      "status": "confirmed",
+      "suggestedBy": "miranda",
+      "createdAt": "2026-11-15T12:00:00Z"
+    },
+    {
+      "id": "l_75",
+      "from": "n_17",
+      "to": "n_46",
+      "reason": "names worn on the wall",
+      "status": "confirmed",
+      "suggestedBy": "miranda",
+      "createdAt": "2026-11-15T12:00:00Z"
+    },
+    {
+      "id": "l_76",
+      "from": "n_20",
+      "to": "n_21",
+      "reason": "names worn on the wall",
+      "status": "confirmed",
+      "suggestedBy": "miranda",
+      "createdAt": "2026-11-15T12:00:00Z"
+    },
+    {
+      "id": "l_77",
+      "from": "n_17",
+      "to": "n_21",
+      "reason": "names worn on the wall",
+      "status": "confirmed",
+      "suggestedBy": "miranda",
+      "createdAt": "2026-11-15T12:00:00Z"
+    },
+    {
+      "id": "l_78",
+      "from": "n_01",
+      "to": "n_47",
+      "reason": "height set by a line it can't cross",
+      "status": "confirmed",
+      "suggestedBy": "miranda",
+      "createdAt": "2026-11-15T12:00:00Z"
+    },
+    {
+      "id": "l_79",
+      "from": "n_05",
+      "to": "n_47",
+      "reason": "height set by a line it can't cross",
+      "status": "confirmed",
+      "suggestedBy": "miranda",
+      "createdAt": "2026-11-15T12:00:00Z"
+    },
+    {
+      "id": "l_80",
+      "from": "n_20",
+      "to": "n_47",
+      "reason": "height set by a line it can't cross",
+      "status": "confirmed",
+      "suggestedBy": "miranda",
+      "createdAt": "2026-11-15T12:00:00Z"
+    },
+    {
+      "id": "l_81",
+      "from": "n_26",
+      "to": "n_47",
+      "reason": "height set by a line it can't cross",
+      "status": "confirmed",
+      "suggestedBy": "miranda",
+      "createdAt": "2026-11-15T12:00:00Z"
+    },
+    {
+      "id": "l_82",
+      "from": "n_01",
+      "to": "n_05",
+      "reason": "height set by a line it can't cross",
+      "status": "confirmed",
+      "suggestedBy": "miranda",
+      "createdAt": "2026-11-15T12:00:00Z"
+    },
+    {
+      "id": "l_83",
+      "from": "n_05",
+      "to": "n_20",
+      "reason": "height set by a line it can't cross",
+      "status": "confirmed",
+      "suggestedBy": "miranda",
+      "createdAt": "2026-11-15T12:00:00Z"
+    },
+    {
+      "id": "l_84",
+      "from": "n_05",
+      "to": "n_26",
+      "reason": "height set by a line it can't cross",
+      "status": "confirmed",
+      "suggestedBy": "miranda",
+      "createdAt": "2026-11-15T12:00:00Z"
+    },
+    {
+      "id": "l_85",
+      "from": "n_21",
+      "to": "n_48",
+      "reason": "an address that skips the street name",
+      "status": "confirmed",
+      "suggestedBy": "miranda",
+      "createdAt": "2026-11-15T12:00:00Z"
+    },
+    {
+      "id": "l_86",
+      "from": "n_15",
+      "to": "n_48",
+      "reason": "an address that skips the street name",
+      "status": "confirmed",
+      "suggestedBy": "miranda",
+      "createdAt": "2026-11-15T12:00:00Z"
+    },
+    {
+      "id": "l_87",
+      "from": "n_18",
+      "to": "n_48",
+      "reason": "an address that skips the street name",
+      "status": "confirmed",
+      "suggestedBy": "miranda",
+      "createdAt": "2026-11-15T12:00:00Z"
+    },
+    {
+      "id": "l_88",
+      "from": "n_15",
+      "to": "n_21",
+      "reason": "an address that skips the street name",
+      "status": "confirmed",
+      "suggestedBy": "miranda",
+      "createdAt": "2026-11-15T12:00:00Z"
+    },
+    {
+      "id": "l_89",
+      "from": "n_15",
+      "to": "n_18",
+      "reason": "an address that skips the street name",
+      "status": "confirmed",
+      "suggestedBy": "miranda",
+      "createdAt": "2026-11-15T12:00:00Z"
+    },
+    {
+      "id": "l_90",
+      "from": "n_34",
+      "to": "n_49",
+      "reason": "the street is named for what it makes",
+      "status": "confirmed",
+      "suggestedBy": "miranda",
+      "createdAt": "2026-11-15T12:00:00Z"
+    },
+    {
+      "id": "l_91",
+      "from": "n_17",
+      "to": "n_49",
+      "reason": "the street is named for what it makes",
+      "status": "confirmed",
+      "suggestedBy": "miranda",
+      "createdAt": "2026-11-15T12:00:00Z"
+    },
+    {
+      "id": "l_92",
+      "from": "n_17",
+      "to": "n_34",
+      "reason": "the street is named for what it makes",
+      "status": "confirmed",
+      "suggestedBy": "miranda",
+      "createdAt": "2026-11-15T12:00:00Z"
+    },
+    {
+      "id": "l_93",
+      "from": "n_06",
+      "to": "n_50",
+      "reason": "the strength is hidden inside",
+      "status": "confirmed",
+      "suggestedBy": "miranda",
+      "createdAt": "2026-11-15T12:00:00Z"
+    },
+    {
+      "id": "l_94",
+      "from": "n_10",
+      "to": "n_50",
+      "reason": "the strength is hidden inside",
+      "status": "confirmed",
+      "suggestedBy": "miranda",
+      "createdAt": "2026-11-15T12:00:00Z"
+    },
+    {
+      "id": "l_95",
+      "from": "n_06",
+      "to": "n_10",
+      "reason": "the strength is hidden inside",
+      "status": "confirmed",
+      "suggestedBy": "miranda",
+      "createdAt": "2026-11-15T12:00:00Z"
+    },
+    {
+      "id": "l_96",
+      "from": "n_08",
+      "to": "n_51",
+      "reason": "edges given up to movement",
+      "status": "confirmed",
+      "suggestedBy": "miranda",
+      "createdAt": "2026-11-15T12:00:00Z"
+    },
+    {
+      "id": "l_97",
+      "from": "n_19",
+      "to": "n_51",
+      "reason": "edges given up to movement",
+      "status": "confirmed",
+      "suggestedBy": "miranda",
+      "createdAt": "2026-11-15T12:00:00Z"
+    },
+    {
+      "id": "l_98",
+      "from": "n_08",
+      "to": "n_19",
+      "reason": "edges given up to movement",
+      "status": "confirmed",
+      "suggestedBy": "miranda",
+      "createdAt": "2026-11-15T12:00:00Z"
+    }
+  ],
+  "contradictions": [],
+  "creature": {
+    "name": null,
+    "mood": "curious",
+    "hungryFor": [],
+    "says": "hi. i'm small. i've been chewing on some cities someone left me.",
+    "stage": "hatchling"
+  }
+}
