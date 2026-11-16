@@ -14,11 +14,13 @@ Every part of the app reads and writes these four shapes. Need a new field? Add 
   "createdAt": "2026-11-16T19:20:00Z",
   "lastTouchedAt": "2026-11-16T19:20:00Z",
   "vitality": 1.0,
-  "replacedBy": null
+  "replacedBy": null,
+  "topic": "water draws the city"
 }
 ```
 - `vitality` runs 1 (fresh) down to a 0.15 floor (Engram). Notes are never deleted; a replaced note keeps `replacedBy` and shows as a ghost.
 - `lastTouchedAt` updates whenever the note is opened, edited, or linked.
+- `topic` (optional): the limb this note belongs to, a short human name. Seed notes carry one (waystone). A new note without one picks up the topic of the first note it gets a confirmed link to (Forge's shell). Lines fill `{topic}` from it; if no note in the drooping limb has a topic, the shell falls back to that limb's most common specific tag.
 
 ## Link
 ```json
@@ -34,6 +36,7 @@ Confirmed links draw solid; suggested ones faint and dotted; rejected ones are k
 { "id": "c_01", "a": "n_03", "b": "n_09", "summary": "...",
   "status": "open | both_true | newer_wins | merged | not_now | never" }
 ```
+- `a` is always the **older** note (by `createdAt`) and flares **coral**; `b` is the **newer** note and flares **violet**. Lines quote them in that order: old, then new.
 
 ## Creature
 ```json
