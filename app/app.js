@@ -3,7 +3,7 @@
 import { createCreature } from '../viz/creature.js';
 import {
   STORAGE_KEY, emptyStore, tick, clusterHunger, newNote, touch, suggestLinks, openSuggestion, confirmLink, rejectLink,
-  detectContradictions, localJudge, openArgument, resolve, maybeName, speech,
+  detectContradictions, localJudge, openArgument, resolve, maybeName, speech, welcomeWellFed,
 } from './store.js';
 
 const $ = id => document.getElementById(id);
@@ -47,13 +47,13 @@ function loadSaved() { try { const s = JSON.parse(localStorage.getItem(STORAGE_K
 const fromSeed = () => JSON.parse(JSON.stringify({ ...emptyStore(), ...SEED }));
 
 // tick on load, after every change, and every 30 s. Always hands the viz clusterHunger().
-function refresh({ justAdded = false, lastNoteId = null, event = null, action = false } = {}) {
+function refresh({ justAdded = false, lastNoteId = null, event = null, action = false, say = null } = {}) {
   const now = Date.now();
   store = tick(store, now, { justAdded });
   const hunger = clusterHunger(store, now);
   creature.update({ ...store, hunger, now });
   if (action) held = false;
-  const next = speech(store, LINES, { hunger, event, lastNoteId });
+  const next = say || speech(store, LINES, { hunger, event, lastNoteId });
   if (next.event) { held = true; said = next; } // a one-off line holds until the next action
   else if (!held && next.key !== said.key) said = next;
   store = { ...store, creature: { ...store.creature, says: said.text } };
@@ -82,6 +82,19 @@ function openNote(id) {
   store = touch(store, id); // opening a note feeds it
   document.body.classList.remove('panel-closed'); $('toggle-panel').setAttribute('aria-expanded', 'true'); syncInset();
   refresh();
+}
+
+// First run: a hatchling gets the first-meal greeting; a creature that opens well fed gets one
+// welcome_well_fed line (once, flagged in creature.welcomed). Either holds until the first note or ~20 s.
+let welcomeTimer = 0;
+function firstRun() {
+  held = false;
+  store = tick(store, Date.now());
+  const w = welcomeWellFed(store, LINES);
+  if (w.said) { store = w.store; refresh({ say: w.said }); } else refresh({ event: 'first_meal' });
+  clearTimeout(welcomeTimer);
+  const key = said.key;
+  welcomeTimer = setTimeout(() => { if (said.key === key) { held = false; refresh(); } }, 20_000);
 }
 
 // ---------- render ----------
@@ -158,7 +171,7 @@ $('toggle-panel').onclick = () => { const closed = document.body.classList.toggl
 $('reset').onclick = () => {
   if (!confirm('start over? this clears your notes in this browser and reloads the seed.')) return;
   localStorage.removeItem(STORAGE_KEY); store = fromSeed(); openId = null; said = { key: '' };
-  refresh({ event: 'first_meal', action: true });
+  firstRun();
 };
 $('export').onclick = () => {
   const a = document.createElement('a');
@@ -205,7 +218,7 @@ const [seed, lines] = await Promise.all([
 SEED = seed; LINES = lines;
 const saved = loadSaved();
 store = saved || fromSeed();
-refresh({ event: saved ? null : 'first_meal' });
+if (saved) refresh(); else firstRun();
 setInterval(() => refresh(), 30_000);
 
 // handle for demos, tests, and a real model judge later:

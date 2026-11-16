@@ -202,6 +202,20 @@ export function maybeName(store) {
 
 const fill = (tpl, v) => (tpl || '').replace(/\{(\w+)\}/g, (_, k) => v[k] ?? '');
 const low = s => String(s || '').toLowerCase();
+const nameFrom = notes => NAMES[notes.reduce((s, n) => s + [...String(n.text)].reduce((x, ch) => x + ch.charCodeAt(0), 0), 0) % NAMES.length];
+
+// First run that opens already well fed (not a hatchling): one welcome_well_fed line, once ever.
+// creature.welcomed persists that it was shown. If the line carries {name}, this is the naming
+// moment (waystone-lines.md): the creature picks its name here and the 10-note naming never fires.
+export function welcomeWellFed(store, lines, pick = Math.random) {
+  const arr = lines?.welcome_well_fed || [], c = store.creature || {};
+  const hatchling = c.stage === 'hatchling' || store.notes.filter(alive).length < 8;
+  if (!arr.length || hatchling || c.welcomed) return { store, said: null };
+  const tpl = arr[Math.floor(pick() * arr.length) % arr.length];
+  const name = c.name || (tpl.includes('{name}') ? nameFrom(store.notes) : null);
+  const s = { ...store, creature: { ...c, welcomed: true, ...(name ? { name } : {}) } };
+  return { store: s, said: { key: 'welcome', text: fill(tpl, { name }), event: true } };
+}
 // what the creature says now: { key, text }. key changes only when the situation does,
 // so the shell can keep one line per situation instead of chattering.
 export function speech(store, lines, { hunger, event, lastNoteId, pick = Math.random } = {}) {

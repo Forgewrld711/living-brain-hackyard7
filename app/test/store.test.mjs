@@ -88,3 +88,22 @@ console.log('T3 mood', h2.creature.mood, hu2[0].hunger.toFixed(2), S.speech(h2, 
   assert.equal(sp2.key, 'first_meal'); assert.ok(sp2.event);
   console.log('GREETING OK');
 }
+
+{ // welcome_well_fed: once, only when the first run opens well fed
+  const fed = S.tick(structuredClone(seed));
+  const w = S.welcomeWellFed(fed, lines, () => 0);
+  console.log('welcome:', w.said?.text, '| name', w.store.creature.name);
+  assert.ok(w.said && w.said.event && w.said.key === 'welcome');
+  assert.equal(w.said.text, lines.welcome_well_fed[0].replace('{name}', w.store.creature.name || ''));
+  assert.ok(!w.said.text.includes('{'), 'no unfilled slot');
+  assert.equal(w.store.creature.welcomed, true);
+  if (lines.welcome_well_fed[0].includes('{name}')) { assert.ok(w.store.creature.name); assert.equal(S.maybeName(w.store).named, false, 'named once'); }
+  const again = S.welcomeWellFed(S.tick(w.store), lines); assert.equal(again.said, null, 'shows once (flag survives tick)');
+  const small = S.tick({ ...structuredClone(seed), notes: seed.notes.slice(0, 5), links: [] });
+  assert.equal(S.welcomeWellFed(small, lines).said, null, 'hatchling keeps first_meal');
+  assert.equal(S.welcomeWellFed(fed, { ...lines, welcome_well_fed: [] }).said, null, 'no lines, no welcome');
+  // after the welcome, normal picking resumes
+  const after = S.speech(S.tick(w.store), lines, { hunger: S.clusterHunger(w.store) });
+  assert.notEqual(after.key, 'welcome'); console.log('then:', after.key);
+  console.log('WELCOME OK');
+}
