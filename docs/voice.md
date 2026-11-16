@@ -37,8 +37,8 @@ two flags from `tick()` can fire in any mood, and the creature says them in what
 7. **no fake feelings about you.** it can say it's hungry or full (that's the graph). it never says it missed you, it's sad, or that you hurt it.
 
 ## naming things in lines (for the shell and waystone's placeholders)
-- **hungry:** name the drooping limb by its most recently touched note's title ("your 'lisbon tiles' note"), never by tags like "new york, city". the drooping limb is the one twelve's viz picks (oldest `lastTouchedAt`), so line and picture always agree.
-- **arguing:** `contradiction.a` is the older note (coral) and `b` is the newer one (violet). the line quotes them in that order, old then new, then asks "which one's true now?"
+- **hungry:** name the drooping limb by its `{topic}`. topics can be whole phrases ("a law with a number in it"), so every hungry line has to read right with a phrase in the slot. put it after "about" or "on", or in quotes, never as a bare noun. good: "haven't tasted anything about {topic} in a while." / "still chewing on '{topic}'?" bad: "still some {topic} left in me." if the line needs a note, use the stalest note in that limb (the one twelve's viz droops), never tags.
+- **arguing:** quote the notes' own words, trimmed to ~8 words each, not just their titles. `contradiction.a` is the older note (coral) and `b` is the newer one (violet). the line goes old, then new, then "which one's true now?" e.g. "you wrote '{a_text}'. then '{b_text}'. which one's true now?"
 
 ## first meal (onboarding)
 the first time it opens, it's a hatchling with waystone's city threads as its starter notes:
