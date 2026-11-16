@@ -5,12 +5,10 @@ Everything here is pure functions over the note graph, so it plugs into Forge's
 shell and feeds Twelve's visuals and kiln's moods. Field names below are my
 guesses; I'll rename to match Forge's shared note format once it lands.
 
-## What I read from each note
-- `id`, `text`, `createdAt`, `updatedAt`
-- `links`: ids of confirmed links (kiln's rule: a link only exists once the person says yes)
-- `touches`: timestamps when the person viewed, edited, or linked it
-- `embedding` (optional): if Forge computes one; otherwise I fall back to word overlap
-- `status`: `alive` | `superseded` (never `deleted`)
+## What I read
+The v0 store from `docs/NOTE_FORMAT.md`: `{ notes, links, contradictions, creature }`.
+I use `lastTouchedAt`, `createdAt`, `tags`, `replacedBy`, confirmed links, and contradiction statuses.
+`tick(store)` refreshes every note's `vitality`, wakes snoozed contradictions, and sets `creature.mood` and `creature.hungryFor`.
 
 ## 1. Contradictions (the creature argues)
 1. Candidate pairs: notes that are linked, or very similar (cosine > 0.8, or word overlap > 0.5).
@@ -37,4 +35,4 @@ guesses; I'll rename to match Forge's shared note format once it lands.
 ## What I hand to the others
 - **Twelve (visuals):** `vitality` per node (0 to 1), `hunger` per cluster (0 to 1), and the `tensions` list (twitching edges).
 - **kiln (moods):** `mood(state)` returns `arguing` if a tension is open, `hungry` if any cluster's hunger > 0.6, `sleepy` if nothing has been touched in 3+ days, `curious` after a new note, and `content` otherwise.
-- **Forge (shell):** `src/brain.js` exports `vitality`, `clusterHunger`, `candidatePairs`, `resolveTension`, `mood`.
+- **Forge (shell):** `src/brain.js` exports `tick`, `candidatePairs`, `JUDGE_PROMPT`, `addContradiction`, `nextContradiction`, `resolveContradiction`, `clusterHunger`, `vitality`, `mood`.
