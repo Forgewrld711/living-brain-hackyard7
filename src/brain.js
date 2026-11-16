@@ -120,6 +120,14 @@ export function tick(store, t = Date.now(), opts = {}) {
   const s = refreshVitality(wakeSnoozed(store, t), t);
   const hunger = clusterHunger(s, t);
   const m = mood(s, t, opts);
+  const byId = new Map(s.notes.map(n => [n.id, n]));
+  const top = hunger[0] && hunger[0].hunger > 0.6 ? hunger[0] : null;
+  // Name the hungry limb by its stalest notes (what the viz droops), not by tags.
+  // Kept even while arguing, so the droop and the line survive an argument.
+  const stalest = top ? [...top.ids].sort((a, b) => ms(byId.get(a).lastTouchedAt) - ms(byId.get(b).lastTouchedAt)) : [];
+  const live = s.notes.filter(alive).length;
   return { ...s, creature: { ...s.creature, mood: m, flags: flags(s, t, opts),
-    hungryFor: m === 'hungry' ? hunger[0].tags.slice(0, 3) : [] } };
+    hungryFor: stalest.slice(0, 3).map(id => byId.get(id).title),
+    hungryIds: top ? top.ids : [],
+    stage: live < 8 ? 'hatchling' : live < 20 ? 'growing' : 'well_fed' } };
 }

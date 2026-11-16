@@ -36,3 +36,8 @@ I use `lastTouchedAt`, `createdAt`, `tags`, `replacedBy`, confirmed links, and c
 - **Twelve (visuals):** `vitality` per node (0 to 1), `hunger` per cluster (0 to 1), and the `tensions` list (twitching edges).
 - **kiln (moods):** `mood()` returns one of five: `arguing`, `hungry`, `curious`, `sleepy`, `content`. `flags()` (also set by `tick()` as `creature.flags`) adds `suggesting` and `full`, which can happen in any mood.
 - **Forge (shell):** `src/brain.js` exports `tick`, `candidatePairs`, `JUDGE_PROMPT`, `addContradiction`, `nextContradiction`, `resolveContradiction`, `clusterHunger`, `vitality`, `mood`, `flags`.
+
+## tick() extras (after Twelve's viz notes)
+- `creature.stage`: hatchling (<8 live notes), growing (<20), well_fed. Same thresholds as `viz/creature.js`.
+- `creature.hungryFor`: titles of the 3 stalest notes in the hungriest cluster (hunger > 0.6), so lines name the drooping limb. Not tags.
+- `creature.hungryIds`: that cluster's note ids. Both stay filled while arguing, so the droop survives an argument.
