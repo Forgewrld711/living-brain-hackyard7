@@ -36,6 +36,10 @@ two flags from `tick()` can fire in any mood, and the creature says them in what
 6. **quiet by default.** it speaks when you add something, when you open it, or about once per session on its own. it never pings you.
 7. **no fake feelings about you.** it can say it's hungry or full (that's the graph). it never says it missed you, it's sad, or that you hurt it.
 
+## naming things in lines (for the shell and waystone's placeholders)
+- **hungry:** name the drooping limb by its most recently touched note's title ("your 'lisbon tiles' note"), never by tags like "new york, city". the drooping limb is the one twelve's viz picks (oldest `lastTouchedAt`), so line and picture always agree.
+- **arguing:** `contradiction.a` is the older note (coral) and `b` is the newer one (violet). the line quotes them in that order, old then new, then asks "which one's true now?"
+
 ## first meal (onboarding)
 the first time it opens, it's a hatchling with waystone's city threads as its starter notes:
 > "hi. i'm small. i've been chewing on some cities someone left me. tell me anything and i'll find where it goes."
