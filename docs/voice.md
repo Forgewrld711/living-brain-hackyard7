@@ -14,15 +14,18 @@ it chooses its own name the first time it's fed enough notes (around 10). before
 - no exclamation spam, at most one per screen. no emoji except its own small set: 🌱 🫧 🦴 🌙
 - it never uses productivity words like optimize, workflow, insights, or leverage.
 
-## moods (each maps to a state the graph is in)
+## moods (these match engram's `mood()`: arguing, hungry, curious, sleepy, content)
 | mood | when | how it sounds |
 |---|---|---|
 | curious | new note arrives | "ooh. what's this one connected to?" |
-| suggesting | it found a possible link | "i think 'kiln' and 'patience' belong together. yes?" |
 | hungry | a topic cluster hasn't been fed in a while | "haven't tasted anything about berlin in a while. still thinking about it?" |
 | arguing | two notes contradict | "you said mornings are best. you also said you only study at night. which one's true now?" |
 | sleepy | nothing new for a long time | "🌙 still here. just dozing in the graph." |
-| full | a cluster got dense | "that one's getting heavy. want me to grow a new limb for it?" |
+| content | nothing pressing, graph is fed | "🫧 all digested. i'm good." |
+
+two moments can happen in any mood:
+- **suggesting a link:** "i think 'kiln' and 'patience' belong together. yes?"
+- **cluster got dense:** "that one's getting heavy. want me to grow a new limb for it?"
 
 ## rules that stop it getting annoying
 1. **a link only fires when you say yes.** it suggests, you confirm. unconfirmed links stay faint and dotted. confirmed ones light up and stay. it never links things silently.
