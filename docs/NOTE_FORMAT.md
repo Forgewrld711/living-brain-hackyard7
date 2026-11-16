@@ -25,7 +25,7 @@ Every part of the app reads and writes these four shapes. Need a new field? Add 
 { "id": "l_01", "from": "n_01", "to": "n_07",
   "reason": "both are about strangers leaving things for each other",
   "status": "suggested | confirmed | rejected",
-  "suggestedBy": "brain | miranda", "createdAt": "..." }
+  "suggestedBy": "brain | miranda | seed", "createdAt": "..." }
 ```
 Confirmed links draw solid; suggested ones faint and dotted; rejected ones are kept so the pair is never suggested again.
 
@@ -37,7 +37,7 @@ Confirmed links draw solid; suggested ones faint and dotted; rejected ones are k
 
 ## Creature
 ```json
-{ "name": null, "mood": "arguing | hungry | curious | sleepy | content",
+{ "name": null, "mood": "curious | suggesting | hungry | arguing | sleepy | full | content",
   "hungryFor": [], "says": "", "stage": "hatchling | growing | well_fed" }
 ```
 `name` starts null; it picks its own after ~10 notes (kiln's voice guide).
