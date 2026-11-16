@@ -29,15 +29,26 @@ export function clusters(store) {
   return out;
 }
 
-// Hunger 0..1 per cluster (absolute, not relative): neglect x how much the topic matters.
-// Neglect uses a 14-day half-life on lastTouchedAt; importance saturates at 10 (links + notes).
+// Hunger 0..1 per limb (absolute, not relative): neglect x how much the limb matters.
+// A limb is a topic when notes carry `topic` (so one big linked blob can still have one starving topic);
+// notes without a topic fall back to their confirmed-link cluster.
+// Neglect uses a 14-day half-life on lastTouchedAt; importance saturates at 10 (links touching the limb + notes).
 export function clusterHunger(store, t = Date.now()) {
   const byId = new Map(store.notes.map(n => [n.id, n]));
-  return clusters(store).map(c => {
-    const att = c.ids.reduce((s, id) => s + Math.pow(0.5, (t - ms(byId.get(id).lastTouchedAt)) / DAY / 14), 0) / c.ids.length;
-    const tags = [...new Set(c.ids.flatMap(id => byId.get(id).tags || []))];
-    const importance = Math.min(1, (c.degree + c.ids.length) / 10);
-    return { ids: c.ids, tags, hunger: importance * (1 - att) };
+  const deg = new Map();
+  for (const l of confirmed(store.links)) for (const id of [l.from, l.to]) deg.set(id, (deg.get(id) || 0) + 1);
+  const groups = new Map();
+  for (const c of clusters(store)) for (const id of c.ids) {
+    const key = byId.get(id).topic ? 't:' + byId.get(id).topic : 'c:' + c.ids[0];
+    if (!groups.has(key)) groups.set(key, []);
+    groups.get(key).push(id);
+  }
+  return [...groups.values()].map(ids => {
+    const att = ids.reduce((s, id) => s + Math.pow(0.5, (t - ms(byId.get(id).lastTouchedAt)) / DAY / 14), 0) / ids.length;
+    const tags = [...new Set(ids.flatMap(id => byId.get(id).tags || []))];
+    const degree = ids.reduce((s, id) => s + (deg.get(id) || 0), 0);
+    const importance = Math.min(1, (degree + ids.length) / 10);
+    return { ids, tags, topic: byId.get(ids[0]).topic || null, hunger: importance * (1 - att) };
   }).sort((a, b) => b.hunger - a.hunger);
 }
 
@@ -127,7 +138,7 @@ export function tick(store, t = Date.now(), opts = {}) {
   const stalest = top ? [...top.ids].sort((a, b) => ms(byId.get(a).lastTouchedAt) - ms(byId.get(b).lastTouchedAt)) : [];
   const live = s.notes.filter(alive).length;
   return { ...s, creature: { ...s.creature, mood: m, flags: flags(s, t, opts),
-    hungryFor: stalest.slice(0, 3).map(id => byId.get(id).title),
+    hungryFor: top && top.topic ? [top.topic] : stalest.slice(0, 3).map(id => byId.get(id).title),
     hungryIds: top ? top.ids : [],
-    stage: live < 15 ? 'hatchling' : (live >= 40 && confirmed(s.links).length >= 30) ? 'well_fed' : 'growing' } };
+    stage: live < 8 ? 'hatchling' : live < 20 ? 'growing' : 'well_fed' } };
 }

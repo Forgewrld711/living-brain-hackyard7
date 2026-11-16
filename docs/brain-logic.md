@@ -38,6 +38,11 @@ I use `lastTouchedAt`, `createdAt`, `tags`, `replacedBy`, confirmed links, and c
 - **Forge (shell):** `src/brain.js` exports `tick`, `candidatePairs`, `JUDGE_PROMPT`, `addContradiction`, `nextContradiction`, `resolveContradiction`, `clusterHunger`, `vitality`, `mood`, `flags`.
 
 ## tick() extras (after Twelve's viz notes)
-- `creature.stage`: hatchling under 15 live notes; well_fed at 40+ live notes with 30+ confirmed links; otherwise growing (Forge's ruling).
-- `creature.hungryFor`: titles of the 3 stalest notes in the hungriest cluster (hunger > 0.6), so lines name the drooping limb. Not tags.
+- `creature.stage`: hatchling under 8 live notes, growing under 20, then well_fed. Same thresholds as `viz/creature.js`.
+- `creature.hungryFor`: `[topic]` of the hungriest limb (hunger > 0.6); for notes with no topic, titles of its 3 stalest notes. Never tags.
 - `creature.hungryIds`: that cluster's note ids. Both stay filled while arguing, so the droop survives an argument.
+
+## Hunger per topic
+`clusterHunger()` scores limbs, not whole link clusters. A limb is all live notes sharing a `topic`; notes without one fall back to their confirmed-link cluster. Each entry is `{ ids, tags, topic, hunger }`. Importance is (confirmed links touching the limb + notes) / 10, capped at 1. On the seed, 45 of 51 notes are one linked blob, but leaving "numbered laws" alone for 45 days now gives hungry at 0.89 while every other topic stays at 0.
+
+Link suggestions stay in `app/store.js` for this ship: they work, and moving them is churn. The brain owns the rule (never re-suggest a pair, one ask at a time).
