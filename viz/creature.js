@@ -29,13 +29,13 @@ const rot = (x, y, a) => [x * Math.cos(a) - y * Math.sin(a), x * Math.sin(a) + y
 
 // Limb directions in degrees (canvas: 0 = right, 90 = straight down). First three are
 // the hatchling's legs, then arms, then the in-between slots.
-const LIMB_SLOTS = [112, 90, 66, 198, -18, 142, 38, 222, -42, 160, 20];
+const LIMB_SLOTS = [112, 90, 68, 200, -20, 148, 32, 226, -46, 170, 10, 244, -64, 188, -8];
 const HEAD_RING = [[158, 5.2], [186, 5.8], [214, 5], [246, 5.6], [276, 6], [318, 4.6], [12, 4.4]];
 const TORSO_FIXED = [232, 308, 168, 12];
 
 export function createCreature(canvas, options = {}) {
   const ctx = canvas.getContext('2d');
-  const topicOfOpt = options.topicOf || null; // (note) => topic string; default is groupTopics()
+  const topicOfOpt = options.topicOf || null; // (note) => topic string; default is note.topic via groupTopics()
   const mq = typeof matchMedia === 'function' ? matchMedia('(prefers-reduced-motion: reduce)') : null;
   let reducedOverride = options.reducedMotion; // undefined = follow the OS setting
   const reduced = () => reducedOverride ?? !!(mq && mq.matches);
@@ -55,6 +55,23 @@ export function createCreature(canvas, options = {}) {
   let phase = 0, time = 0, last = performance.now(), raf = 0, hovered = null;
   let frame = { notes: [], deco: [], head: null, torso: null, eyes: [], br: 0 };
 
+  // inset: the creature is laid out in the canvas minus this margin (CSS px), so it can
+  // sit in the open area beside the shell's 320px side panel and above the dock.
+  const normInset = v => {
+    const o = v && typeof v === 'object' ? v : {};
+    return {
+      left: Math.max(0, +o.left || 0), right: Math.max(0, +o.right || 0),
+      top: Math.max(0, +o.top || 0), bottom: Math.max(0, +o.bottom || 0),
+    };
+  };
+  let inset = normInset(options.inset);
+  const visible = () => {
+    const l = inset.left, t = inset.top;
+    const w = Math.max(1, W - l - inset.right), h = Math.max(1, H - t - inset.bottom);
+    return { l, t, w, h, cx: l + w * 0.5, cy: t + h * 0.56 };
+  };
+  const applySize = () => { const v = visible(); U = Math.min(v.w, v.h) / 1000; };
+
   // ---------- inputs ----------
   function setNotes(notesIn = [], linksIn = []) {
     notes = notesIn.slice(); links = linksIn.slice();
@@ -62,17 +79,24 @@ export function createCreature(canvas, options = {}) {
     const topicMap = topicOfOpt ? new Map(notes.map(n => [n.id, topicOfOpt(n)])) : groupTopics(notes, links);
     const sorted = notes.slice().sort((a, b) =>
       (topicMap.hubs?.has(b.id) ? 1 : 0) - (topicMap.hubs?.has(a.id) ? 1 : 0) ||
-      String(a.createdAt || '').localeCompare(String(b.createdAt || '')));
+      String(a.createdAt || '').localeCompare(String(b.createdAt || '')) ||
+      String(a.id).localeCompare(String(b.id)));
     const groups = new Map();
     for (const n of sorted) { const tp = topicMap.get(n.id); if (!groups.has(tp)) groups.set(tp, []); groups.get(tp).push(n); }
-    // a topic keeps its slot while it exists; new topics take the lowest free slot (legs first)
+    // a topic keeps its slot while it exists; new topics take the lowest free slot (legs first),
+    // larger groups first so the dense limbs land at the bottom when the creature is first filled.
     for (const tp of [...slotOf.keys()]) if (!groups.has(tp)) slotOf.delete(tp);
     const used = new Set(slotOf.values());
-    for (const tp of groups.keys()) if (!slotOf.has(tp)) { let i = 0; while (used.has(i)) i++; slotOf.set(tp, i); used.add(i); }
+    const newTopics = [...groups.keys()].filter(tp => !slotOf.has(tp))
+      .sort((a, b) => groups.get(b).length - groups.get(a).length || String(a).localeCompare(String(b)));
+    for (const tp of newTopics) { let i = 0; while (used.has(i)) i++; slotOf.set(tp, i); used.add(i); }
     limbs = [...groups].map(([topic, ns]) => {
       const slot = slotOf.get(topic);
       const deg = slot < LIMB_SLOTS.length ? LIMB_SLOTS[slot] : -60 + ((slot * 97) % 300);
-      const ids = ns.map(n => n.id);
+      // the note whose title is the topic (the hub) sits at the tip / bud centre
+      const hub = ns.find(n => n.title === topic);
+      const rest = hub ? ns.filter(n => n !== hub) : ns;
+      const ids = hub ? [...rest.map(n => n.id).slice(0, 2), hub.id, ...rest.map(n => n.id).slice(2)] : rest.map(n => n.id);
       return {
         topic, slot, angle: deg * DEG, seed: strSeed(topic), ids,
         chain: ids.slice(0, 3), petals: ids.length >= 4 ? ids.slice(3) : [],
@@ -97,7 +121,7 @@ export function createCreature(canvas, options = {}) {
     if (Array.isArray(state.notes)) setNotes(state.notes, state.links || links);
     const cr = state.creature || {};
     brain = { ...brain, ...state };
-    for (const k of ['mood', 'hungryFor', 'stage', 'flags']) if (cr[k] !== undefined && state[k] === undefined) brain[k] = cr[k];
+    for (const k of ['mood', 'hungryFor', 'hungryIds', 'stage', 'flags']) if (cr[k] !== undefined && state[k] === undefined) brain[k] = cr[k];
     const list = brain.disagreements || brain.tensions || brain.contradictions || [];
     // one ask at a time (kiln): only the first open pair flares
     const open = list.find(d => (d.status == null || d.status === 'open') && byId.has(d.a) && byId.has(d.b));
@@ -124,26 +148,51 @@ export function createCreature(canvas, options = {}) {
   // suggesting / full: a mood (seven-mood format) or a creature.flags entry (five moods + flags)
   const active = name => brain.mood === name || !!(brain.flags && brain.flags[name]);
 
-  // Hunger per limb. Engram decides HOW hungry: max of clusterHunger() entries ({ ids, tags, hunger },
-  // absolute 0..1), or mood 'hungry' / non-empty hungryFor. The viz decides WHERE: the limb whose notes
-  // have gone longest without a touch (lastTouchedAt), plus any limb a cluster entry sits inside.
+  // Hunger per limb. Engram decides how much and (when it names a topic) which limb.
+  // clusterHunger() entries with a `topic` droop that limb, scaled by hunger (0..1).
+  // hungryFor may be topic strings (current tick) or note titles (older tick).
+  // Staleness is only a fallback when nothing was named.
+  function limbOfName(key) {
+    if (key == null || key === '') return null;
+    if (limbs.some(l => l.topic === key)) return key;
+    const note = notes.find(n => n.id === key || n.title === key);
+    if (note) return limbs.find(l => l.ids.includes(note.id))?.topic || note.topic || null;
+    const low = String(key).toLowerCase();
+    const l2 = limbs.find(l => String(l.topic).toLowerCase() === low);
+    if (l2) return l2.topic;
+    const n2 = notes.find(n => String(n.title).toLowerCase() === low);
+    return n2 ? (limbs.find(l => l.ids.includes(n2.id))?.topic || n2.topic || null) : null;
+  }
   function limbHunger() {
     const h = brain.hunger, out = new Map(), now = brain.now ?? Date.now();
-    const bump = (tp, v) => out.set(tp, Math.max(out.get(tp) || 0, v));
+    const bump = (tp, v) => { if (tp == null || tp === '') return; out.set(tp, Math.max(out.get(tp) || 0, v || 0)); };
     let level = brain.mood === 'hungry' || (brain.hungryFor || []).length ? 1 : 0;
+    let named = false;
     if (Array.isArray(h)) {
       for (const e of h) {
-        if (e.topic != null) bump(e.topic, e.hunger);
         level = Math.max(level, smooth(0.4, 0.75, e.hunger || 0));
-        if (!e.ids || !e.ids.length) continue;
+        if (e.topic != null && e.topic !== '') { bump(e.topic, e.hunger); named = true; continue; }
+        if (!e.ids || !e.ids.length || e.ids.length >= 0.6 * Math.max(1, notes.length)) continue;
         for (const l of limbs) {
           const inLimb = e.ids.filter(id => l.ids.includes(id)).length;
-          if (inLimb / e.ids.length >= 0.5 && e.ids.length < 0.6 * notes.length) bump(l.topic, e.hunger);
+          if (inLimb / e.ids.length >= 0.5) { bump(l.topic, e.hunger); named = true; }
         }
       }
-    } else if (h && typeof h === 'object') for (const [tp, v] of Object.entries(h)) bump(tp, v);
-    for (const tag of brain.hungryFor || []) if (limbs.some(l => l.topic === tag)) bump(tag, 1);
-    if (level > 0) {
+    } else if (h && typeof h === 'object') {
+      for (const [tp, v] of Object.entries(h)) { bump(limbOfName(tp) || tp, v); named = true; }
+    }
+    for (const item of brain.hungryFor || []) {
+      const tp = limbOfName(item);
+      if (tp) { bump(tp, Math.max(level, 1)); named = true; }
+    }
+    const hid = brain.hungryIds;
+    if (Array.isArray(hid) && hid.length && hid.length < 0.6 * Math.max(1, notes.length)) {
+      for (const l of limbs) {
+        const inLimb = hid.filter(id => l.ids.includes(id)).length;
+        if (inLimb / hid.length >= 0.5) { bump(l.topic, Math.max(level, 0.7)); named = true; }
+      }
+    }
+    if (level > 0 && !named) {
       const stale = new Map(limbs.map(l => {
         const ns = l.ids.map(id => byId.get(id)).filter(n => n && !isGhost(n));
         const v = ns.reduce((acc, n) => acc + 1 - Math.pow(0.5, Math.max(0, now - (Date.parse(n.lastTouchedAt || n.createdAt) || now)) / 864e5 / 14), 0) / Math.max(1, ns.length);
@@ -209,7 +258,7 @@ export function createCreature(canvas, options = {}) {
   function layout(dt, R, k) {
     const s = U * g, tn = R ? 0 : time;
     const br = R ? 0 : Math.sin((2 * Math.PI * phase) / 1) * (1 - 0.5 * tense);
-    const cx = W * 0.5, cy = H * 0.56;
+    const { cx, cy } = visible();
     const T = { x: cx + leanX * U * 0.35, y: cy + leanY * U * 0.3 };
     const tr = { rx: 68 * s * (1 + 0.012 * br), ry: 78 * s * (1 + 0.016 * br) };
     const neck = { x: T.x, y: T.y - 70 * s };
@@ -325,7 +374,7 @@ export function createCreature(canvas, options = {}) {
     bg.width = Math.max(1, W * dpr); bg.height = Math.max(1, H * dpr);
     const b = bg.getContext('2d'); b.scale(dpr, dpr);
     b.fillStyle = PAL.night; b.fillRect(0, 0, W, H);
-    const m = Math.min(W, H), mx = W * 0.84, my = H * 0.14;
+    const v = visible(), m = Math.min(v.w, v.h), mx = v.l + v.w * 0.84, my = v.t + v.h * 0.14;
     const rad = (x, y, r, c, a) => { const gr = b.createRadialGradient(x, y, 0, x, y, r); gr.addColorStop(0, rgba(c, a)); gr.addColorStop(1, rgba(c, 0)); b.fillStyle = gr; b.fillRect(x - r, y - r, 2 * r, 2 * r); };
     rad(mx, my, m * 0.45, C.lifted, 0.9);
     for (let i = 0; i < 70; i++) {
@@ -341,9 +390,9 @@ export function createCreature(canvas, options = {}) {
       b.fillRect(hash(i * 1.17) * W, hash(i * 2.31 + 9) * H, 1, 1);
     }
     for (let i = 0; i < 40; i++) { b.fillStyle = rgba(C.thread, 0.08 + hash(i) * 0.1); b.fillRect(hash(i * 5.3 + 1) * W, hash(i * 7.1 + 3) * H, 1, 1); }
-    const v = b.createRadialGradient(W / 2, H / 2, m * 0.3, W / 2, H / 2, Math.max(W, H) * 0.8);
-    v.addColorStop(0, 'rgba(4,5,9,0)'); v.addColorStop(1, 'rgba(4,5,9,0.35)');
-    b.fillStyle = v; b.fillRect(0, 0, W, H);
+    const vig = b.createRadialGradient(W / 2, H / 2, m * 0.3, W / 2, H / 2, Math.max(W, H) * 0.8);
+    vig.addColorStop(0, 'rgba(4,5,9,0)'); vig.addColorStop(1, 'rgba(4,5,9,0.35)');
+    b.fillStyle = vig; b.fillRect(0, 0, W, H);
   }
 
   function blobPath(c, rx, ry, a0, seed, tn) {
@@ -539,12 +588,41 @@ export function createCreature(canvas, options = {}) {
   }
 
   // ---------- loop, sizing, input ----------
+  function relayout() {
+    if (!W || !H) return;
+    applySize();
+    buildBg();
+    const R = reduced();
+    layout(0, R, R ? 0.35 : 1);
+  }
+  function setInset(v) {
+    inset = normInset(v);
+    relayout();
+  }
   function resize() {
     const r = canvas.getBoundingClientRect();
     dpr = Math.min(2, window.devicePixelRatio || 1);
-    W = Math.max(1, r.width); H = Math.max(1, r.height); U = Math.min(W, H) / 1000;
+    W = Math.max(1, r.width); H = Math.max(1, r.height);
     canvas.width = Math.round(W * dpr); canvas.height = Math.round(H * dpr);
-    buildBg();
+    relayout();
+  }
+  // CSS px relative to the canvas (same space as pointer events). If the canvas is
+  // position:fixed; inset:0, these are also viewport coordinates.
+  function point(x, y, r, name) { return (x == null || y == null) ? null : { x, y, r: r || 0, name }; }
+  function getNodePosition(id) {
+    const o = frame.byId?.get(id);
+    return o ? point(o.x, o.y, o.r, id) : null;
+  }
+  function getAnchor(name = 'head') {
+    const f = frame, key = name || 'head';
+    if (!f || !f.Hc) return null;
+    if (key === 'head') return point(f.Hc.x, f.Hc.y, Math.max(f.hr.rx, f.hr.ry), 'head');
+    if (key === 'torso' || key === 'chest') return point(f.T.x, f.T.y, Math.max(f.tr.rx, f.tr.ry), key);
+    if (key === 'eyes' && f.eyes?.length) {
+      const es = f.eyes;
+      return point(es.reduce((s, e) => s + e.x, 0) / es.length, es.reduce((s, e) => s + e.y, 0) / es.length, Math.max(...es.map(e => e.r)) * 2, 'eyes');
+    }
+    return getNodePosition(key);
   }
   function tick(now) {
     const dt = Math.min(0.05, Math.max(0, (now - last) / 1000)); last = now; time += dt;
@@ -575,19 +653,38 @@ export function createCreature(canvas, options = {}) {
     onNodeClick(fn) { handlers.click.add(fn); return () => handlers.click.delete(fn); },
     onNodeHover(fn) { handlers.hover.add(fn); return () => handlers.hover.delete(fn); },
     setReducedMotion(v) { reducedOverride = v; },
-    getNodePosition(id) { const o = frame.byId?.get(id); return o ? { x: o.x, y: o.y, r: o.r } : null; },
+    getNodePosition, getAnchor, setInset,
+    getInset() { return { ...inset }; },
+    getLimbs() { return limbs.map(l => ({ topic: l.topic, ids: l.ids.slice(), chain: l.chain.slice(), petals: l.petals.slice(), sag: l.sag || 0, angle: l.angle })); },
     get stage() { return brain.stage || (notes.length < 8 ? 'hatchling' : notes.length < 20 ? 'growing' : 'well_fed'); },
     resize,
     destroy() { cancelAnimationFrame(raf); ro && ro.disconnect(); canvas.removeEventListener('click', onClick); canvas.removeEventListener('pointermove', onMove); },
   };
 }
 
-// Default limb grouping.
+// Default limb grouping: note.topic is the limb label.
+// Notes without a topic inherit one from the nearest confirmed-link neighbour that has one
+// (the first confirmed link, as in Forge's shell). If no note carries a topic, fall back to:
 // 1) tag mode: each note's most specific shared tag (used by 2+ notes and by < 60% of them).
-// 2) hub mode, when tags don't split the graph (e.g. waystone's seed: every city has its own
-//    tag plus "city"): the best-connected notes become limb roots and every other note joins
-//    the hub it is linked to (confirmed links), walking outward through neighbours.
+// 2) hub mode, when tags don't split the graph: the best-connected notes become limb roots
+//    and every other note joins the hub it is linked to (confirmed links).
 export function groupTopics(notes, links = [], maxLimbs = 5) {
+  const ids = new Set(notes.map(n => n.id));
+  const confirmedLinks = links.filter(l => l.status === 'confirmed' && ids.has(l.from) && ids.has(l.to))
+    .slice().sort((a, b) => String(a.createdAt || '').localeCompare(String(b.createdAt || '')) || String(a.id).localeCompare(String(b.id)));
+  if (notes.some(n => n.topic)) {
+    const adj = new Map(notes.map(n => [n.id, []]));
+    for (const l of confirmedLinks) { adj.get(l.from).push(l.to); adj.get(l.to).push(l.from); }
+    const topicOf = new Map();
+    for (const n of notes) if (n.topic) topicOf.set(n.id, n.topic);
+    let frontier = [...topicOf.keys()];
+    while (frontier.length) {
+      const next = [];
+      for (const id of frontier) for (const x of adj.get(id) || []) if (!topicOf.has(x)) { topicOf.set(x, topicOf.get(id)); next.push(x); }
+      frontier = next;
+    }
+    return new Map(notes.map(n => [n.id, topicOf.get(n.id) || (n.tags && n.tags[0]) || 'loose']));
+  }
   const N = notes.length, freq = new Map();
   for (const n of notes) for (const t of new Set(n.tags || [])) freq.set(t, (freq.get(t) || 0) + 1);
   const useful = t => freq.get(t) >= 2 && freq.get(t) < 0.6 * N;
@@ -604,7 +701,7 @@ export function groupTopics(notes, links = [], maxLimbs = 5) {
     const m = new Map(notes.map(n => [n.id, byTag.get(n.id) || (n.tags && n.tags[0]) || 'untagged']));
     return m;
   }
-  const ids = new Set(notes.map(n => n.id)), adj = new Map(notes.map(n => [n.id, []]));
+  const adj = new Map(notes.map(n => [n.id, []]));
   for (const l of links) if (l.status === 'confirmed' && ids.has(l.from) && ids.has(l.to)) { adj.get(l.from).push(l.to); adj.get(l.to).push(l.from); }
   const deg = id => adj.get(id).length;
   const hubs = [];

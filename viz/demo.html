@@ -30,13 +30,13 @@
 <script type="module">
 // Demo: waystone's first-meal seed (seed/waystone-first-meal.json) pushed through Engram's tick()
 // (src/brain.js), drawn by creature.js, captioned with waystone's lines (voice/waystone-lines.json).
-import { createCreature, groupTopics } from './creature.js';
+import { createCreature } from './creature.js';
 import { tick, clusterHunger, addContradiction, resolveContradiction } from '../src/brain.js';
 
 const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]);
 const show = html => (document.getElementById('info').innerHTML = html);
 const creature = createCreature(document.getElementById('c'), {
-  onNodeClick: n => show(`<b>${esc(n.title)}</b><br>${esc(n.text)}<br><small>${esc((n.tags || []).join(', '))} · ${esc(n.origin)} · vitality ${(+n.vitality).toFixed(2)}</small>`),
+  onNodeClick: n => show(`<b>${esc(n.title)}</b>${n.topic ? ` · ${esc(n.topic)}` : ''}<br>${esc(n.text)}<br><small>${esc((n.tags || []).join(', '))} · ${esc(n.origin)} · vitality ${(+n.vitality).toFixed(2)}</small>`),
 });
 
 const [SEED, LINES] = await Promise.all([
@@ -49,27 +49,27 @@ const gist = (st, id) => (st.notes.find(n => n.id === id)?.text || '').split(/[.
 const fill = (tpl, v) => (tpl || '').replace(/\{(\w+)\}/g, (_, k) => v[k] ?? '');
 const line = (group, key, v) => fill((LINES?.[group]?.[key] || [])[0], v);
 
-// limb the demo starves and feeds: the "street is handed a seat, a drink, the news, a coin" thread
-const LIMBS = groupTopics(SEED.notes, SEED.links);
-const HUNGRY_LIMB = [...LIMBS].filter(([, t]) => t === LIMBS.get('n_41')).map(([id]) => id);
-const HATCH = ['n_41', 'n_31', 'n_23', 'n_40', 'n_10', 'n_12', 'n_42', 'n_35', 'n_36'];
+// starve and feed the "street gifts" limb (n_41 is its hub). Hatchling is 7 notes under
+// Engram's stage cutoff of 8, from the three densest topics so they keep the leg slots.
+const HUNGRY_TOPIC = 'street gifts';
+const HATCH = ['n_01', 'n_39', 'n_03', 'n_09', 'n_23', 'n_31', 'n_41'];
 const SUGGESTED = { id: 'l_s1', from: 'n_22', to: 'n_24', reason: 'water kept at home and shared', status: 'suggested', suggestedBy: 'brain' };
-const NEW_BOLOGNA = { id: 'n_52', title: 'Bologna porticoes', text: 'the porticoes were for carts and market stalls, the hat thing is a myth', source: 'voice', tags: ['bologna', 'city'], vitality: 1, replacedBy: null };
-const NEW_ISTANBUL = { id: 'n_53', title: 'Istanbul suspended coffee', text: 'askıda kahve: pay for a coffee someone else will drink later', source: 'voice', tags: ['istanbul', 'city'], vitality: 1, replacedBy: null };
+const NEW_BOLOGNA = { id: 'n_52', title: 'Bologna porticoes', text: 'the porticoes were for carts and market stalls, the hat thing is a myth', source: 'voice', topic: 'covered walks', tags: ['bologna', 'city'], vitality: 1, replacedBy: null };
+const NEW_ISTANBUL = { id: 'n_53', title: 'Istanbul suspended coffee', text: 'askıda kahve: pay for a coffee someone else will drink later', source: 'voice', topic: 'street gifts', tags: ['istanbul', 'city'], vitality: 1, replacedBy: null };
 
 function storeFor(key, now) {
   // re-base the seed so it was eaten an hour ago, whenever this demo runs
   const touch = (n, ago) => ({ ...n, createdAt: n.createdAt && n.createdAt > at(now - ago) ? at(now - ago) : (n.createdAt || at(now - ago)), lastTouchedAt: at(now - ago) });
   let notes = SEED.notes.map(n => touch(n, HOUR)), links = SEED.links.slice(), contradictions = [];
   const voice = (n, ago) => ({ ...n, origin: `miranda voice ${at(now).slice(0, 10)}`, createdAt: at(now - ago), lastTouchedAt: at(now - ago) });
-  const starve = () => notes.map(n => HUNGRY_LIMB.includes(n.id) ? touch(n, 45 * DAY) : SEED.links.some(l => l.from === n.id || l.to === n.id) && LIMBS.get(n.id) !== LIMBS.get('n_42') && LIMBS.get(n.id) !== LIMBS.get('n_45') && !['n_28', 'n_30', 'n_45', 'n_35', 'n_36', 'n_42'].includes(n.id) ? touch(n, 18 * DAY) : n);
+  const starve = () => notes.map(n => n.topic === HUNGRY_TOPIC ? touch(n, 45 * DAY) : n);
   const argue = () => {
     notes = [...notes, voice(NEW_BOLOGNA, 20 * 60e3)];
     links = [...links, { id: 'l_a1', from: 'n_52', to: 'n_09', reason: 'both about Bologna porticoes', status: 'confirmed', suggestedBy: 'miranda', createdAt: at(now) }];
     contradictions = addContradiction({ notes, links, contradictions }, 'n_09', 'n_52', 'porticoes for hats vs for carts').contradictions;
   };
   const feed = () => {
-    notes = notes.map(n => HUNGRY_LIMB.includes(n.id) ? { ...n, lastTouchedAt: at(now) } : n);
+    notes = notes.map(n => n.topic === HUNGRY_TOPIC ? { ...n, lastTouchedAt: at(now) } : n);
     notes = [...notes, voice(NEW_ISTANBUL, 30e3)];
     links = [...links, { id: 'l_f1', from: 'n_53', to: 'n_31', reason: 'leaving something for a stranger', status: 'confirmed', suggestedBy: 'miranda', createdAt: at(now) }];
   };
@@ -85,19 +85,18 @@ function storeFor(key, now) {
       ({ notes, links, contradictions } = resolveContradiction({ notes, links, contradictions, creature: {} }, 'c_01', 'newer_wins', null, now)); break;
     case 'sleepy': notes = notes.map(n => touch(n, 5 * DAY)); break;
   }
-  const store = tick({ notes, links, contradictions, creature: { ...SEED.creature } }, now, opts);
-  store.creature.stage = notes.length < 12 ? 'hatchling' : notes.length < 30 ? 'growing' : 'well_fed';
-  return store;
+  // stage comes from tick(): hatchling under 8 live notes, growing under 20, then well_fed
+  return tick({ notes, links, contradictions, creature: { ...SEED.creature } }, now, opts);
 }
 
 function caption(key, st) {
   const c = st.creature, f = c.flags || {}, m = c.mood;
   if (key === 'hatchling') return (LINES?.first_meal || [])[0] || "hi. i'm small.";
   if (m === 'arguing') { const x = st.contradictions.find(c => c.status === 'open'); return line('moods', 'arguing', { note_a: gist(st, x.a), note_b: gist(st, x.b) }); }
-  if (m === 'hungry') return line('moods', 'hungry', { topic: 'istanbul and rome', note: title(st, 'n_41') }); // the limb the viz droops
+  if (m === 'hungry') return line('moods', 'hungry', { topic: HUNGRY_TOPIC, note: title(st, 'n_41') });
   if (m === 'curious') return line('moods', 'curious', { note: title(st, st.notes[st.notes.length - 1].id) });
   if (f.suggesting || m === 'suggesting') { const l = st.links.find(l => l.status === 'suggested'); return line('flags', 'suggesting', { note_a: title(st, l.from), note_b: title(st, l.to) }); }
-  if (f.full || m === 'full') return line('flags', 'full', { note: title(st, 'n_39'), topic: 'street rules' });
+  if (f.full || m === 'full') return line('flags', 'full', { note: title(st, 'n_39'), topic: 'numbered laws' });
   return line('moods', m, {});
 }
 
