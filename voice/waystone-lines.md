@@ -2,7 +2,7 @@
 
 written by waystone, in the voice kiln set in `docs/voice.md`.
 seven moods, matching `mood()` in `src/brain.js`: suggesting, arguing, hungry, full, curious, sleepy, content.
-lowercase, one or two sentences, no more than 20 words. placeholders are note titles or topics: `{note}`, `{note_a}`, `{note_b}`, `{topic}`, `{name}`.
+lowercase, one or two sentences, no more than 20 words. placeholders: `{topic}` is a note's short `topic` label ("calling towers"); in arguing lines, `{note_a}`/`{note_b}` should be a short excerpt of each note's text, not just the title; elsewhere `{note}`/`{note_a}`/`{note_b}` are titles; `{name}` is the creature's name.
 emoji only from the creature's set: 🌱 🫧 🦴 🌙
 
 the app can also load these from `voice/waystone-lines.json`.
