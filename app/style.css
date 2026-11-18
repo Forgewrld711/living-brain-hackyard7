@@ -87,6 +87,11 @@ body.panel-closed .dock { right: 0; }
 @media (max-width: 760px) {
   :root { --panel-w: 100vw; }
   body:not(.panel-closed) .dock { display: none; }
+  /* panel is 100vw, so keep the top controls on screen and above it, or you can't close it */
+  body:not(.panel-closed) .top { right: 18px; }
+  .top, .brand { z-index: 5; }
+  .panel { z-index: 4; }
+  body:not(.panel-closed) .panel { padding-top: 56px; }
   .brand p { display: none; }
 }
 @media (prefers-reduced-motion: reduce) { .mic[aria-pressed="true"] { animation: none; } .bubble { transition: opacity .4s; } .panel, .dock, .top { transition: none; } }
