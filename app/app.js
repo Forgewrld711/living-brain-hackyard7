@@ -56,7 +56,11 @@ function refresh({ justAdded = false, lastNoteId = null, event = null, action = 
   creature.update({ ...store, hunger, now });
   if (action) held = false;
   const next = say || speech(store, LINES, { hunger, event, lastNoteId });
-  if (next.event) { held = true; said = next; } // a one-off line holds until the next action
+  if (next.event) { // one-off lines hold, then lapse: greetings longer, after_no just a beat
+    held = true; said = next;
+    const long = next.key === 'welcome' || next.key === 'first_meal' || next.key === 'named';
+    holdLine(next.key, long ? 20_000 : 8_000);
+  }
   else if (!held && next.key !== said.key) said = next;
   store = { ...store, creature: { ...store.creature, says: said.text } };
   save();
@@ -89,14 +93,15 @@ function openNote(id) {
 // First run: a hatchling gets the first-meal greeting; a creature that opens well fed gets one
 // welcome_well_fed line (once, flagged in creature.welcomed). Either holds until the first note or ~20 s.
 let welcomeTimer = 0;
+function holdLine(key, ms = 20_000) {
+  clearTimeout(welcomeTimer);
+  welcomeTimer = setTimeout(() => { if (said.key === key) { held = false; refresh(); } }, ms);
+}
 function firstRun() {
   held = false;
   store = tick(store, Date.now());
   const w = welcomeWellFed(store, LINES);
   if (w.said) { store = w.store; refresh({ say: w.said }); } else refresh({ event: 'first_meal' });
-  clearTimeout(welcomeTimer);
-  const key = said.key;
-  welcomeTimer = setTimeout(() => { if (said.key === key) { held = false; refresh(); } }, 20_000);
 }
 
 // ---------- render ----------
