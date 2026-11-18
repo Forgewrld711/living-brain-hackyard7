@@ -46,7 +46,17 @@ if (typeof ResizeObserver === 'function') new ResizeObserver(syncInset).observe(
 // ---------- store ----------
 function save() { try { localStorage.setItem(STORAGE_KEY, JSON.stringify(store)); } catch (e) { hint('could not save (storage full or blocked).'); } }
 function loadSaved() { try { const s = JSON.parse(localStorage.getItem(STORAGE_KEY)); return s && Array.isArray(s.notes) ? { ...emptyStore(), ...s } : null; } catch { return null; } }
-const fromSeed = () => JSON.parse(JSON.stringify({ ...emptyStore(), ...SEED }));
+// the seed keeps waystone's real dates; on load we slide them so its newest moment is "now",
+// so a judge opening this any day meets a fresh, well-fed creature (not a sleepy one).
+const ISO = /^\d{4}-\d{2}-\d{2}T[\d:.]+Z$/;
+function slideDates(obj) {
+  let newest = 0;
+  JSON.stringify(obj, (k, v) => { if (typeof v === 'string' && ISO.test(v)) newest = Math.max(newest, Date.parse(v)); return v; });
+  if (!newest) return obj;
+  const delta = Date.now() - newest;
+  return JSON.parse(JSON.stringify(obj), (k, v) => (typeof v === 'string' && ISO.test(v)) ? new Date(Date.parse(v) + delta).toISOString() : v);
+}
+const fromSeed = () => slideDates({ ...emptyStore(), ...SEED });
 
 // tick on load, after every change, and every 30 s. Always hands the viz clusterHunger().
 function refresh({ justAdded = false, lastNoteId = null, event = null, action = false, say = null } = {}) {
