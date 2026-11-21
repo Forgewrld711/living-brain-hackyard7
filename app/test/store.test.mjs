@@ -1,9 +1,14 @@
 import fs from 'node:fs';
 import assert from 'node:assert';
-const R = new URL('../../', import.meta.url).pathname;
-const S = await import(R + 'app/store.js');
-const seed = JSON.parse(fs.readFileSync(R + 'seed/waystone-first-meal.json'));
-const lines = JSON.parse(fs.readFileSync(R + 'voice/waystone-lines.json'));
+import path from 'node:path';
+import { fileURLToPath, pathToFileURL } from 'node:url';
+
+// URL.pathname produces /C:/... on Windows. Convert through Node's file URL
+// helpers so the same test actually runs on Windows, macOS and Linux.
+const R = fileURLToPath(new URL('../../', import.meta.url));
+const S = await import(pathToFileURL(path.join(R, 'app/store.js')).href);
+const seed = JSON.parse(fs.readFileSync(path.join(R, 'seed/waystone-first-meal.json')));
+const lines = JSON.parse(fs.readFileSync(path.join(R, 'voice/waystone-lines.json')));
 let st = S.tick(structuredClone(seed));
 console.log('seed mood', st.creature.mood, st.creature.stage, st.creature.flags);
 console.log('speech', S.speech(st, lines, { hunger: S.clusterHunger(st) }));

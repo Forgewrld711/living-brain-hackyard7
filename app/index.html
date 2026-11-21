@@ -3,8 +3,10 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#0B0C12">
 <title>living brain</title>
-<link rel="icon" href="data:,">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="manifest" href="manifest.webmanifest">
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -18,8 +20,17 @@
 
 <nav class="top">
   <button id="toggle-panel" aria-expanded="true" aria-controls="panel">notes</button>
-  <button id="export" title="download your notes as json">export</button>
-  <button id="reset" title="start over with waystone's seed">reset</button>
+  <details class="tools">
+    <summary>vault</summary>
+    <div class="tool-menu">
+      <button id="new-brain" title="start with a clean private brain">new brain</button>
+      <button id="import" title="restore a Living Brain JSON file">import</button>
+      <button id="export" title="download your notes as JSON">export</button>
+      <button id="install" title="install this brain on your device" hidden>install app</button>
+      <button id="reset" title="replace this brain with the city demo">load demo</button>
+    </div>
+  </details>
+  <input id="import-file" class="sr" type="file" accept="application/json,.json" tabindex="-1">
 </nav>
 
 <aside id="panel" class="panel">

@@ -4,7 +4,11 @@
 import { tick, clusterHunger, candidatePairs, addContradiction, nextContradiction, resolveContradiction } from '../src/brain.js';
 
 export const STORAGE_KEY = 'living-brain:v0';
-export const emptyStore = () => ({ notes: [], links: [], contradictions: [], creature: {} });
+export const emptyStore = () => ({
+  schemaVersion: 1,
+  meta: { owner: 'local owner' },
+  notes: [], links: [], contradictions: [], creature: {},
+});
 const ms = iso => (iso ? Date.parse(iso) : 0);
 const iso = t => new Date(t).toISOString();
 const alive = n => !n.replacedBy;
@@ -45,7 +49,8 @@ export function newNote(store, text, source = 'text', t = Date.now()) {
   const now = iso(t);
   const note = {
     id: nextId('n_', store.notes), title: makeTitle(clean.replace(/#[\p{L}\p{N}_-]+/gu, '').trim() || clean), text: clean,
-    source, origin: `miranda ${source} ${now.slice(0, 10)}`, tags: extractTags(clean, store.notes),
+    source, author: store.meta?.owner || 'local owner',
+    origin: `${store.meta?.owner || 'local owner'} ${source} ${now.slice(0, 10)}`, tags: extractTags(clean, store.notes),
     createdAt: now, lastTouchedAt: now, vitality: 1, replacedBy: null,
   };
   return { store: { ...store, notes: [...store.notes, note] }, note };

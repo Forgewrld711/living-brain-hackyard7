@@ -20,6 +20,14 @@ button:hover, button:focus-visible { border-color: var(--dim); color: var(--thre
 
 .top { position: fixed; top: 14px; right: calc(var(--panel-w) + 18px); display: flex; gap: 6px; transition: right .3s; }
 body.panel-closed .top { right: 18px; }
+.tools { position: relative; }
+.tools summary { list-style: none; user-select: none; background: transparent; border: 1px solid var(--membrane); border-radius: 999px; padding: 6px 13px; cursor: pointer; }
+.tools summary::-webkit-details-marker { display: none; }
+.tools[open] summary, .tools summary:hover, .tools summary:focus-visible { border-color: var(--dim); color: var(--thread); outline: none; }
+.tool-menu { position: absolute; top: calc(100% + 8px); right: 0; width: 170px; padding: 8px; display: grid; gap: 5px; z-index: 8;
+  background: rgba(26,30,42,.98); border: 1px solid var(--membrane); border-radius: 12px; box-shadow: 0 14px 40px rgba(0,0,0,.35); }
+.tool-menu button { width: 100%; text-align: left; border-radius: 8px; }
+.tool-menu #reset { color: var(--coral); }
 
 /* side panel: every note, faded ones dimmer, never removed */
 .panel { position: fixed; top: 0; right: 0; bottom: 0; width: var(--panel-w); display: flex; flex-direction: column;
@@ -93,6 +101,7 @@ body.panel-closed .dock { right: 0; }
   .panel { z-index: 4; }
   body:not(.panel-closed) .panel { padding-top: 56px; }
   .brand p { display: none; }
+  .tool-menu { max-height: calc(100vh - 70px); overflow-y: auto; }
 }
 @media (prefers-reduced-motion: reduce) { .mic[aria-pressed="true"] { animation: none; } .bubble { transition: opacity .4s; } .panel, .dock, .top { transition: none; } }
 .detail a { color: var(--silver); text-decoration: none; border-bottom: 1px dotted var(--ash2); }

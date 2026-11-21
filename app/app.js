@@ -5,6 +5,7 @@ import {
   STORAGE_KEY, emptyStore, tick, clusterHunger, newNote, touch, suggestLinks, openSuggestion, confirmLink, rejectLink,
   detectContradictions, localJudge, openArgument, resolve, maybeName, speech, welcomeWellFed,
 } from './store.js';
+import { writeBackup, readBackup, clearBackup } from './persistence.js';
 
 const $ = id => document.getElementById(id);
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
@@ -44,7 +45,21 @@ window.addEventListener('resize', syncInset);
 if (typeof ResizeObserver === 'function') new ResizeObserver(syncInset).observe(document.querySelector('.dock'));
 
 // ---------- store ----------
-function save() { try { localStorage.setItem(STORAGE_KEY, JSON.stringify(store)); } catch (e) { hint('could not save (storage full or blocked).'); } }
+function validStore(value) {
+  return value && typeof value === 'object' && Array.isArray(value.notes) && Array.isArray(value.links) &&
+    value.notes.every(n => n && typeof n.id === 'string' && typeof n.text === 'string') &&
+    value.links.every(l => l && typeof l.id === 'string' && typeof l.from === 'string' && typeof l.to === 'string');
+}
+function normalizedStore(value) {
+  if (!validStore(value)) return null;
+  const base = emptyStore();
+  return { ...base, ...value, meta: { ...base.meta, ...(value.meta || {}) }, contradictions: Array.isArray(value.contradictions) ? value.contradictions : [] };
+}
+function save() {
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(store)); }
+  catch (e) { hint('could not save in this browser. export a backup now.'); }
+  writeBackup(store).catch(() => hint('the second local backup could not be updated. export is still available.'));
+}
 function loadSaved() { try { const s = JSON.parse(localStorage.getItem(STORAGE_KEY)); return s && Array.isArray(s.notes) ? { ...emptyStore(), ...s } : null; } catch { return null; } }
 // the seed keeps waystone's real dates; on load we slide them so its newest moment is "now",
 // so a judge opening this any day meets a fresh, well-fed creature (not a sleepy one).
@@ -185,15 +200,49 @@ $('entry').addEventListener('submit', e => { e.preventDefault(); const t = $('te
 $('notes').addEventListener('click', e => { const li = e.target.closest('li[data-id]'); if (li) openNote(li.dataset.id); });
 $('filter').addEventListener('input', renderList);
 $('toggle-panel').onclick = () => { const closed = document.body.classList.toggle('panel-closed'); $('toggle-panel').setAttribute('aria-expanded', String(!closed)); syncInset(); };
-$('reset').onclick = () => {
-  if (!confirm('start over? this clears your notes in this browser and reloads the seed.')) return;
-  localStorage.removeItem(STORAGE_KEY); store = fromSeed(); openId = null; said = { key: '' };
+$('new-brain').onclick = async () => {
+  if (!confirm('start a clean brain? export first if you want to keep this one.')) return;
+  localStorage.removeItem(STORAGE_KEY); await clearBackup().catch(() => {});
+  store = emptyStore(); openId = null; said = { key: '', text: '' };
+  document.querySelector('.tools').open = false;
+  firstRun(); hint('clean brain started. it stays on this device.');
+};
+$('reset').onclick = async () => {
+  if (!confirm('replace this brain with the 51-note city demo? export first if you want to keep it.')) return;
+  localStorage.removeItem(STORAGE_KEY); await clearBackup().catch(() => {});
+  store = fromSeed(); openId = null; said = { key: '', text: '' };
+  document.querySelector('.tools').open = false;
   firstRun();
 };
 $('export').onclick = () => {
   const a = document.createElement('a');
   a.href = URL.createObjectURL(new Blob([JSON.stringify(store, null, 2)], { type: 'application/json' }));
   a.download = `living-brain-${new Date().toISOString().slice(0, 10)}.json`; a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+  document.querySelector('.tools').open = false;
+  hint('backup exported.');
+};
+$('import').onclick = () => $('import-file').click();
+$('import-file').onchange = async event => {
+  const file = event.target.files?.[0]; event.target.value = '';
+  if (!file) return;
+  try {
+    const incoming = normalizedStore(JSON.parse(await file.text()));
+    if (!incoming) throw new Error('not a Living Brain file');
+    if (!confirm(`replace this browser's brain with ${incoming.notes.length} imported notes?`)) return;
+    store = incoming; openId = null; said = { key: '', text: '' }; save(); refresh({ action: true });
+    document.querySelector('.tools').open = false;
+    hint(`imported ${store.notes.length} notes. a second local copy was saved.`);
+  } catch (error) { hint(`import failed: ${error.message || 'invalid JSON'}`); }
+};
+
+let installPrompt = null;
+window.addEventListener('beforeinstallprompt', event => {
+  event.preventDefault(); installPrompt = event; $('install').hidden = false;
+});
+$('install').onclick = async () => {
+  if (!installPrompt) return;
+  installPrompt.prompt(); await installPrompt.userChoice; installPrompt = null; $('install').hidden = true;
+  document.querySelector('.tools').open = false;
 };
 
 // ---------- input: voice (Web Speech API) ----------
@@ -233,10 +282,17 @@ const [seed, lines] = await Promise.all([
   fetch('../voice/waystone-lines.json').then(r => r.json()).catch(() => null),
 ]);
 SEED = seed; LINES = lines;
-const saved = loadSaved();
+const fastSaved = normalizedStore(loadSaved());
+const durableSaved = fastSaved ? null : normalizedStore(await readBackup().catch(() => null));
+const saved = fastSaved || durableSaved;
 store = saved || fromSeed();
-if (saved) refresh(); else firstRun();
+if (saved) { refresh(); if (durableSaved) hint('restored from the second local backup.'); }
+else firstRun();
 setInterval(() => refresh(), 30_000);
+
+if ('serviceWorker' in navigator && location.protocol !== 'file:') {
+  navigator.serviceWorker.register('./sw.js').catch(() => hint('offline install is unavailable here; your notes still save locally.'));
+}
 
 // handle for demos, tests, and a real model judge later:
 // livingBrain.setJudge(async (older, newer) => ({ verdict: 'contradicts' | 'fine', summary })) — prompt: JUDGE_PROMPT in src/brain.js
